@@ -1,0 +1,7 @@
+<h2>Admin Panel</h2>
+<form action=""method="POST">
+    {% csrf_token %}
+    {% for key,value in dic.items %}<br>{{key}}:{{ value }}</br>{% endfor %}
+    <button type="submit" name="add">add</button><br>
+    <button type="submit" name="remove">remove</button>
+</form>
