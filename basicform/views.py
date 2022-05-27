@@ -1,21 +1,16 @@
 from http.client import HTTPResponse
+from multiprocessing import context
 from django.forms import model_to_dict
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.contrib.auth import authenticate,login,logout
+from django.contrib import messages
 from .forms import StudentForm1,StudentForm2,StudentForm3,StudentForm,AdminForm
 from formtools.wizard.views import SessionWizardView
 from .models import Student,FinalStudent
 from django.template import loader
-FORMS=[('first',StudentForm1),('second',StudentForm2),('third',StudentForm3)]
-TEMPLATES={'first':'S1.html','second':'S2.html','third':'S3.html'}
 def index(request):
-    form= StudentForm()
-    if request.method=='POST':
-        form= StudentForm(request.POST)
-        if form.is_valid():
-            form.save()           
-    context={'form':form}
-    return render(request,'basicform/index.html',context)
+    return render(request,'basicform/index.html')
 class StudentWizard(SessionWizardView):
     # def get_template_names(self):
     #     return [TEMPLATES[self.steps.current]]
@@ -70,3 +65,35 @@ def misadmin(request):
            return HttpResponseRedirect(hkey)
     context={'form':form}
     return render(request,'admins.html',context)  
+def testrun(request):
+
+    if request.method=='POST':
+        fdict=dict(request.POST.items())
+        fdict.pop('csrfmiddlewaretoken')
+        fdict.pop('H')
+        fdict.pop('L')
+        fdict.pop('I')
+        fdict.pop('J')
+        fdict.pop('K')
+        fdict.pop('N')
+        fdict.pop('M')
+        s=Student(**fdict)
+        s.save()
+        return HttpResponse('Done')
+    return render(request,'Formtest.html')
+def loginUser(request):
+    if request.method=='POST':
+        username=request.POST['username']
+        password=request.POST['password']
+        user=authenticate(request,username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('index')
+        else: 
+            messages.success(request,("There was an error logging you in"))
+            return redirect('/basicform/loginuser/')
+    return render(request,'auth/loginUser.html')
+def logoutUser(request):
+    logout(request)
+    messages.success(request,"YOU WERE LOGGED OUT SUCCESSFULLY!")
+    return redirect('index')

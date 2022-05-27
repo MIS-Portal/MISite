@@ -6,6 +6,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('student/', StudentWizard.as_view([StudentForm1,StudentForm2,StudentForm3])),
     path('misadmin/',views.misadmin,name='admin'),
+    path('test/',views.testrun,name='test'),
+    path('loginuser/',views.loginUser,name='login'),
+    path('logoutuser/',views.logoutUser,name='logout'),
     re_path(r'misadmin/(?P<hkey>.{27})',views.find_student,name='fstudent'),
     # path('showstudent/',views.showstudent,name='showstudent')
 ]

@@ -1,6 +1,45 @@
-<h3>Student Form</h3>
+{%load customtags%}
+<h3>Welcome to MIS Portal</h3>
 <hr>
-<form action=""method="POST">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit"></form>
+{% if messages %}
+{%for message in messages%}
+{{message}}
+{%endfor%}
+{% endif %}
+{%if user.is_authenticated %}
+<a href="/basicform/student">Fill Form</a>
+{%if user|has_group:"Administrator"%}
+<a href="/basicform/misadmin">Check Student</a>
+{%endif%}
+<a href="{% url 'logout' %}">Logout</a>
+{%else%}
+<a href="{%url 'login'%}">Login</a>
+{%endif%}
+<p id="demo"></p>
+<script>
+    /* Get the documentElement (<html>) to display the page in fullscreen */
+    /* View in fullscreen */
+    function openFullscreen() {
+      var elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+      
+    }
+    window.openFullscreen();
+    /* Close fullscreen */
+    function closeFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+      }
+    }
+    </script>
+    <button onclick="openFullscreen();">Open Fullscreen</button>
