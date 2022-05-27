@@ -1,0 +1,130 @@
+{% load static %}
+<head><link rel='stylesheet' href="{% static 'FormStyle.css' %}">
+
+</head>
+<body>
+
+<form id="regForm" action=""method="POST">
+    <!-- {% csrf_token %} -->
+    <h1 align="center">STUDENT FORM</h2>
+    
+    <!-- One "tab" for each step in the form: -->
+    <div class="tab">
+    <h4 align="center">Student Information</h4><hr>
+      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
+      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
+      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
+      <input placeholder="Last name..." oninput="this.className = ''" name="last_name">
+      <span class="choice">
+      <label for="brd">BOARD</label>
+      <select name="board" id="brd"  >
+        <option value="maharashtra">Maharashtra</option>
+        <option value="CBSE">CBSE</option>
+        <option value="ICSE">ICSE</option>
+        <option vlaue="Other">Other</option></select>
+     </span>
+     <span class="choice">
+      <label for="gndr">Gender</label>
+      <select name="gender" id="gndr"  >
+        <option value="male">male</option>
+        <option value="female">female</option>
+        <option vlaue="other">other</option></select>
+      </span>
+      <span class="choice">
+      <label for="cprnd">Cap Round</label>
+      <select name="cap_round" id="cprnd"  >
+        <option value=1>1</option>
+        <option value=2>2</option>
+        <option vlaue=3>3</option></select>
+      </span>
+<span class="choice">
+      <label for="qta">Quota</label>
+      <select name="quota" id="qta"  >
+        <option value="Insti.lvl">Insti.lvl</option>
+        <option vlaue="NEUT">NEUT</option>
+        <option vlaue="OCI">OCI</option>
+        <option vlaue="FN">FN</option>
+        <option vlaue="CIWC">CIWC</option>
+        <option vlaue="ICSE">ICSE</option></select>
+      </span>
+<span class="choice">
+      <label for="st">State</label>
+      <select name="state" id="st"  >
+        <option value="MS">MS</option>
+        <option vlaue="OMS">OMS</option></select>
+      </span>
+
+<span class="choice">
+      <label for="are">Area</label>
+      <select name="area" id="are"  >
+        <option value="rural">rural</option>
+        <option vlaue="urban">urban</option></select>
+      </span>
+
+
+<!--       <label for="brnch">Branch</label>
+      <select name="branch" id="brnch"  >
+        <option value="Computer">Computer Science</option>
+        <option vlaue="IT">IT</option>
+        <option vlaue="ENTC">ENTC</option>
+        <option vlaue="Data Science">Data Science</option></select> --><hr>
+
+      <h4 align="center">Father Information</h4><hr>
+
+      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
+      <input placeholder="Last name..." oninput="this.className = ''" name="last_name">
+      <input placeholder="Father email..." oninput="this.className = ''" name="father_email">
+      <input placeholder="Father occupation..." oninput="this.className = ''" name="father_occupation">
+      <hr>
+      <h4 align="center">Mother Information</h4><hr>
+      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
+      <input placeholder="Last name..." oninput="this.className = ''" name="last_name">
+        <input placeholder="Mother email..." oninput="this.className = ''" name="Mother_email">
+        <input placeholder="Annual Income" oninput="this.className = ''"name='annual income'>
+        <hr>
+    </div>
+    
+    <div class="tab">
+        <h4 align="center">Birth Information</h4><hr>
+      <input placeholder="Date of Birth" oninput="this.className = ''"name='date_of_birth'>
+      <input placeholder="Place of Birth" oninput="this.className = ''"name='place_of_birth'>
+      <input placeholder="Blood group" oninput="this.className = ''"name='Blood_group'>
+      <input placeholder="caste" oninput="this.className = ''"name='caste'>
+      <input placeholder="Religion" oninput="this.className = ''"name='Religion'>
+      <input placeholder="nationality" oninput="this.className = ''"name='nationality'>
+      <hr>
+        <h4 align="center">Contact Information</h4><hr>
+        <input placeholder="Student Mobile No." oninput="this.className = ''"name='Student_mobile'>
+        <input placeholder="Telephone no." oninput="this.className = ''"name='Tele_phone'>
+        <input placeholder="Permanent Address" oninput="this.className = ''"name='permanent_address'>
+        <input placeholder="District" oninput="this.className = ''"name='District'>
+    </div>
+    
+    <div class="tab">Birthday:
+      <p><input placeholder="dd" oninput="this.className = ''"name='J'></p>
+      <p><input placeholder="mm" oninput="this.className = ''"name='K'></p>
+      <p><input placeholder="yyyy" oninput="this.className = ''"name='L'></p>
+    </div>
+    
+    <div class="tab">Login Info:
+      <p><input placeholder="Username..." oninput="this.className = ''"name='M'></p>
+      <p><input placeholder="Password..." oninput="this.className = ''"name='N'></p>
+    </div>
+    
+    <div style="overflow:visible;">
+      <div style="float:right;">
+        <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+        <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+      </div>
+    </div>
+    
+    <!-- Circles which indicates the steps of the form: -->
+    <div style="text-align:center;margin-top:40px;">
+      <span class="step"></span>
+      <span class="step"></span>
+      <span class="step"></span>
+      <span class="step"></span>
+    </div>
+    </form>
+    <script src="{% static 'FormScript.js' %}"></script>
+</body>
