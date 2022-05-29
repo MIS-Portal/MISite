@@ -1,11 +1,12 @@
 {% load static %}
+
 <head><link rel='stylesheet' href="{% static 'FormStyle.css' %}">
 
 </head>
 <body>
 
 <form id="regForm" action=""method="POST">
-    <!-- {% csrf_token %} -->
+    {% csrf_token %}
     <h1 align="center">STUDENT FORM</h2>
     
     <!-- One "tab" for each step in the form: -->

@@ -1,6 +1,43 @@
+<style>
+    .home {
+    background-color: #FFFDD0;
+    margin: 50px auto;
+    padding: 110px 0;
+    text-align: center;
+    width: 90%;
+    font-family: Raleway;
+    align-items: center;
+  }
+  h3{
+    color: blue;
+  }
+  table{
+  align-items: center;
+  transform: translate(100%,0%);
+}
+  td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+ tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+ th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #7484e2;
+  color: white;
+}
+  </style>
+<div class="home">
 <h1>Student Added Successfully!</h1>
 <hr>Student Data:
 <table>
     <tr><th>Feild</th><th>Value</th></tr>
 {%for key,value in dict.items%}<tr><td>{{key}}</td><td>{{value}}</td></tr>{%endfor%}
 </table>
+<a href="{%url 'index' %}">Go to Home</a>
+</div>

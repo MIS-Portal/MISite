@@ -9,6 +9,7 @@ from .forms import StudentForm1,StudentForm2,StudentForm3,StudentForm,AdminForm
 from formtools.wizard.views import SessionWizardView
 from .models import Student,FinalStudent
 from django.template import loader
+from django.views.generic import ListView
 def index(request):
     return render(request,'basicform/index.html')
 class StudentWizard(SessionWizardView):
@@ -69,14 +70,15 @@ def testrun(request):
 
     if request.method=='POST':
         fdict=dict(request.POST.items())
+        print(fdict)
         fdict.pop('csrfmiddlewaretoken')
-        fdict.pop('H')
-        fdict.pop('L')
-        fdict.pop('I')
-        fdict.pop('J')
-        fdict.pop('K')
-        fdict.pop('N')
-        fdict.pop('M')
+        # fdict.pop('H')
+        # fdict.pop('L')
+        # fdict.pop('I')
+        # fdict.pop('J')
+        # fdict.pop('K')
+        # fdict.pop('N')
+        # fdict.pop('M')
         s=Student(**fdict)
         s.save()
         return HttpResponse('Done')
@@ -97,3 +99,5 @@ def logoutUser(request):
     logout(request)
     messages.success(request,"YOU WERE LOGGED OUT SUCCESSFULLY!")
     return redirect('index')
+class DisplayFStudent(ListView):
+    model=FinalStudent
