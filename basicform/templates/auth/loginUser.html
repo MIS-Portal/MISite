@@ -1,3 +1,38 @@
+<style>
+  .home {
+  background-color: #FFFDD0;
+  margin: 50px auto;
+  padding: 110px 0;
+  text-align: center;
+  width: 90%;
+  font-family: Raleway;
+  align-items: center;
+}
+h1{
+  color: blue;
+}
+#submit{
+  background-color: #7272dc;
+  border: none;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin:auto;
+  transform: translate(5%,0%);
+}
+input{
+  padding: 15px 32px;
+  width: 28%;
+  margin: 1%;
+  font-size: 16px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+}
+</style>
+<div class="home">
 <h1>LOGIN</h1>
 {% if messages %}
 {%for message in messages%}
@@ -15,5 +50,6 @@
           <label for="password">Password</label>
           <input type="password" class="form-control" name="password" placeholder="Password">
         </div>
-    <input type="submit" value="Submit">
+    <ul><input type="submit" value="Submit" id="submit"></ul>
 </form>
+</div>

@@ -1,21 +1,60 @@
 {%load customtags%}
+<style>
+  .home {
+  background-color: #FFFDD0;
+  margin: 50px auto;
+  padding: 110px 0;
+  text-align: center;
+  width: 90%;
+  font-family: Raleway;
+  align-items: center;
+}
+h3{
+  color: blue;
+}
+  button {
+  background-color: #7272dc;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+<div class="home">
+<ul>
 <h3>Welcome to MIS Portal</h3>
 <hr>
+</ul>
 {% if messages %}
 {%for message in messages%}
 {{message}}
 {%endfor%}
 {% endif %}
 {%if user.is_authenticated %}
+<ul>
 <a href="/basicform/student">Fill Form</a>
+</ul>
 {%if user|has_group:"Administrator"%}
+<ul>
 <a href="/basicform/misadmin">Check Student</a>
+</ul>
+<ul>
+  <a href="{%url 'studentlist'%}">Student List</a>
+</ul>
 {%endif%}
+<ul>
 <a href="{% url 'logout' %}">Logout</a>
+</ul>
 {%else%}
+<ul>
 <a href="{%url 'login'%}">Login</a>
+</ul>
 {%endif%}
 <p id="demo"></p>
+<ul>    <button onclick="openFullscreen();" >Open Fullscreen</button> </ul>
 <script>
     /* Get the documentElement (<html>) to display the page in fullscreen */
     /* View in fullscreen */
@@ -42,4 +81,4 @@
       }
     }
     </script>
-    <button onclick="openFullscreen();">Open Fullscreen</button>
+  </div>
