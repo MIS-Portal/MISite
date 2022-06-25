@@ -1,84 +1,204 @@
 {%load customtags%}
+{%load static%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
 <style>
   .home {
   background-color: #FFFDD0;
-  margin: 50px auto;
-  padding: 110px 0;
-  text-align: center;
+  margin: 100px auto;
+  padding: 150px 0;
+  /* text-align: center; */
   width: 90%;
-  font-family: Raleway;
+  font-family: 'Arvo', serif;
   align-items: center;
+  font-size: 24px;
 }
 h3{
   color: blue;
+    /* margin-left: auto; */
+    margin: -80px 80px 0px;
+    font-size: 40px;
+    float: left;
 }
-  button {
-  background-color: #7272dc;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
+  button.log {
+    outline: 0;
+    background: #7272dc;
+    width: 15%;
+    border: 0;
+    padding: 15px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3 ease;
+    cursor: pointer;
+    float: right;
+    margin: -80px 10px 0px;
+  }
+img{
+    /* display: block; */
+    width: 60;
+    /* height: fit-content; */
+    margin: -60px 30px;
+    position: absolute;
+    /* top: 497px; */
+    /* bottom: 0px; */
+    float: left;
+}
+.TitleBlock{
   display: inline-block;
-  font-size: 16px;
+}
+.container1{
+  background-color: white;
+    margin: -130px 10px;
+    padding: 0px 0px;
+    /* text-align: center; */
+    width: 50%;
+    height: auto;
+    font-family:'Arvo', serif;
+    /* align-items: center; */
+    font-size: 20px;
+    float: right;
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+    padding:10px;
+}
+.container2{
+  background-color: white;
+    margin: -290px 10px;
+    padding: 0px 0px;
+    /* text-align: center; */
+    width: 50%;
+    height: auto;
+    font-family:'Arvo', serif;
+    /* align-items: center; */
+    font-size: 20px;
+    float: right;
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+    padding:10px;
+    text-align: left;
+}
+.container3{
+  background-color: white;
+    margin: 10px 10px;
+    padding: 0px 0px;
+    /* text-align: center; */
+    width: 94%;
+    height: auto;
+    font-family:'Arvo', serif;
+    /* align-items: center; */
+    font-size: 20px;
+    float: right;
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+    padding:10px;
+    text-align: left;
+}
+li{
+  text-align: left;
+}
+button.act{
+  outline: 0;
+    width: 100%;
+    padding: 10px;
+    height: 75%;
+    margin: 5px;
+    background: #7272dc;
+    border: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+.links{
+  display: flex;
+    flex-direction: column;
+    margin: 80px 0px 0px;
+    padding: 12px 12px;
+}
+a{
+  width: 40%;
+    height: auto;
 }
 </style>
+
 <div class="home">
+<!-- <div class="TitleBlock"> -->
+<img src="{% static 'PICT-Logo.png' %}">
 <ul>
 <h3>Welcome to MIS Portal</h3>
-<hr>
 </ul>
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}"><button class="log">Logout</button></a>
+{% else %}
+<a href="{% url 'login' %}"><button class="log">Login</button></a>
+{% endif %}
+<!-- </div> -->
+<hr>
 {% if messages %}
 {%for message in messages%}
 {{message}}
 {%endfor%}
 {% endif %}
 {%if user.is_authenticated %}
-<ul>
-<a href="/basicform/student">Fill Form</a>
-</ul>
+<div class="links">
+  <!-- <ul> -->
+  <a href="/basicform/student"><button class="act">Fill Form</button></a>
+  <!-- </ul> -->
+  {%if user|has_group:"Administrator"%}
+  <!-- <ul> -->
+  <a href="/basicform/misadmin"><button class="act">Check Student</button></a>
+  <!-- </ul> -->
+  <!-- <ul> -->
+    <a href="{%url 'studentlist'%}"><button class="act">Student List</button></a>
+  <!-- </ul> -->
+  <!-- <ul> -->
+    <a href="{%url 'showpending'%}"><button class="act">Show Pending</button></a>
+    <!-- </ul> -->
+  {%endif%}
+  <!-- <ul> -->
+  <a href="{%url 'viewform'%}"><button class="act">View Form</button></a>
+  <!-- </ul> -->
+</div>
 {%if user|has_group:"Administrator"%}
-<ul>
-<a href="/basicform/misadmin">Check Student</a>
-</ul>
-<ul>
-  <a href="{%url 'studentlist'%}">Student List</a>
-</ul>
-{%endif%}
-<ul>
-<a href="{% url 'logout' %}">Logout</a>
-</ul>
+<div class="container2">
+  <strong>Admin Portal</strong>
+  <hr>
+  <ul>
+  <li><strong>Fill Form: </strong> Fill and Submit Student Information</li>
+  <li><strong>View Form: </strong> View Latest Filled Form</li>
+  <li><strong>Show Pending: </strong>Show Pending Student Verifications</li>
+  <li><strong>Check Student: </strong>Search for Student with Uid,verify and add or remove</li>
+  <li><strong>Show Students: </strong>Final Student List, Download PDF</li></ul>
+ </div>
 {%else%}
-<ul>
-<a href="{%url 'login'%}">Login</a>
-</ul>
+<div class="container1">
+  <strong>Data Entry Portal</strong>
+  <hr>
+  <ul>
+ <li><strong>Fill Form:</strong> Fill and Submit Student Information</li>
+ <li><strong>View Form:</strong> View Latest Filled Form</li></ul>
+</div>
 {%endif%}
-<p id="demo"></p>
-<ul>    <button onclick="openFullscreen();" >Open Fullscreen</button> </ul>
-<script>
-    /* Get the documentElement (<html>) to display the page in fullscreen */
-    /* View in fullscreen */
-    function openFullscreen() {
-      var elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE11 */
-        elem.msRequestFullscreen();
-      }
-      
-    }
-    window.openFullscreen();
-    /* Close fullscreen */
-    function closeFullscreen() {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { /* Safari */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { /* IE11 */
-        document.msExitFullscreen();
-      }
-    }
-    </script>
-  </div>
+{%else%}
+<div class="container3">
+  <strong>User Not Logged in</strong>
+  <hr>
+  <ul>
+ <li><strong>Please Log in to continue</strong></li>
+</div>
+{%endif%} 
