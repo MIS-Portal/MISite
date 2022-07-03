@@ -1,5 +1,4 @@
 import os
-from re import M
 from django.utils.http import urlsafe_base64_encode as b64encode
 from django.db import models
 from django.db import IntegrityError
@@ -12,7 +11,7 @@ class Student(models.Model):
             return pkgen()
         except Student.DoesNotExist :
             return key
-    id = models.CharField(primary_key=True,max_length=20,default=pkgen,unique=True)
+    id = models.CharField(primary_key=True,max_length=28,default=pkgen,unique=True)
     gender_list=[('M','male'),('F','female'),('O','other')]
     cap_choice_list=[(0,0),(1,1),(2,2),(3,3)]
     quota_list=[('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
@@ -105,9 +104,8 @@ class FinalStudent(models.Model):
     branch_list=[('Computer','Computer'),('Data Science','Data Science'),('IT','IT'),('ENTC','ENTC')]
     yesno_list=[('Yes','Yes'),('No','No')]
     category_list=[('SC','SC'),('ST','ST'),('OBC','OBC'),('general','general'),('VJNT','VJNT')]
-
+    reg_no=models.CharField(max_length=20,default='NULL')
     id=models.AutoField(primary_key=True)
-
     #  gender_list=[('M','male'),('F','female'),('O','other')]
     first_name=models.CharField(max_length=200,default='o')
     middle_name=models.CharField(max_length=200,default='o')
@@ -177,7 +175,7 @@ class FinalStudent(models.Model):
     first_attempt=models.CharField(max_length=3,choices=yesno_list,default='yes')
     other_info= models.CharField(blank=True,max_length=100)
     marksheet_name=models.CharField(blank=True,max_length=100)
-    reg_no=models.CharField(max_length=20,default='NULL')
+
 
     def __str__(self):
         return self.first_name+" "+self.last_name

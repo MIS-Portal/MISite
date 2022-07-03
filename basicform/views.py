@@ -1,4 +1,4 @@
-from asyncio.constants import ACCEPT_RETRY_DELAY
+# from asyncio.constants import ACCEPT_RETRY_DELAY
 from http.client import HTTPResponse
 from multiprocessing import context
 from typing import Final
@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.views import View
 from .forms import AdminForm
-from formtools.wizard.views import SessionWizardView
+# from formtools.wizard.views import SessionWizardView
 from .models import Student,FinalStudent
 from django.template import loader
 from django.views.generic import ListView
@@ -18,19 +18,19 @@ def index(request):
     return render(request,'basicform/index.html')
 class ShowPending(ListView):
     model=Student
-class StudentWizard(SessionWizardView):
-    # def get_template_names(self):
-    #     return [TEMPLATES[self.steps.current]]
-    template_name='student_form.html'
-    def done(self,form_list,**kwargs):
-        form_data=process_form_data(form_list)
-        fdict={}
-        for i in form_data:
-            for j in i:fdict[j]=i[j]
-        s=Student(**fdict)
-        s.save()
-        jkey=s.id
-        return render(None,'done.html',{'form_data':form_data,'key':jkey})
+# class StudentWizard(SessionWizardView):
+#     # def get_template_names(self):
+#     #     return [TEMPLATES[self.steps.current]]
+#     template_name='student_form.html'
+#     def done(self,form_list,**kwargs):
+#         form_data=process_form_data(form_list)
+#         fdict={}
+#         for i in form_data:
+#             for j in i:fdict[j]=i[j]
+#         s=Student(**fdict)
+#         s.save()
+#         jkey=s.id
+#         return render(None,'done.html',{'form_data':form_data,'key':jkey})
 def process_form_data(form_list):
     form_data=[form.cleaned_data for form in form_list]
     return form_data
@@ -121,13 +121,14 @@ def GenerateReports(request):
         ctgry=request.POST['category']
         if(brnch!='Any' and ctgry!='Any'):
             q=FinalStudent.objects.filter(academic_year=acyr,branch=brnch,category=ctgry).values()
+
         elif(brnch!='Any' and ctgry=='Any'):
             q=FinalStudent.objects.filter(academic_year=acyr,branch=brnch).values()
         elif(brnch=='Any' and ctgry!='Any'):
             q=FinalStudent.objects.filter(academic_year=acyr,category=ctgry).values()
         else:
             q=FinalStudent.objects.filter(academic_year=acyr).values()
-        print(acyr,brnch,ctgry)
+
         return render(request,'reports.html',{'q':q})
     return render(request,'generatereports.html')
 class DisplayFStudent(ListView):

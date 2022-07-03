@@ -10,7 +10,7 @@ urlpatterns = [
     path('loginuser/',views.loginUser,name='login'),
     path('logoutuser/',views.logoutUser,name='logout'),
     path('showstudents/',DisplayFStudent.as_view(),name='studentlist'),
-    path('generatereports/',views.GenerateReports,name='"generaterprts'),
+    path('generatereports/',views.GenerateReports,name='generaterprts'),
     re_path(r'misadmin/(?P<hkey>.{27})',views.find_student,name='fstudent'),
     # path('showstudent/',views.showstudent,name='showstudent')
 ]
