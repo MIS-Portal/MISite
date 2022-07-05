@@ -1,131 +1,211 @@
 {% load static %}
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<style>body{ font-family:'Arvo', serif;}</style>
 <head><link rel='stylesheet' href="{% static 'FormStyle.css' %}">
-
 </head>
 <body>
-
 <form id="regForm" action=""method="POST">
     {% csrf_token %}
-    <h1 align="center">STUDENT FORM</h2>
-    
+    <div class="heading">
+    <img src="{% static 'PICT-Logo.png' %}">
+    <h1 align="center">STUDENT FORM</h1>
+    </div>
     <!-- One "tab" for each step in the form: -->
     <div class="tab">
-    <h4 align="center">Student Information</h4><hr>
-      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
-      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
-      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
-      <input placeholder="Last name..." oninput="this.className = ''" name="last_name">
-      <span class="choice">
-      <label for="brd">BOARD</label>
-      <select name="board" id="brd"  >
-        <option value="maharashtra">Maharashtra</option>
-        <option value="CBSE">CBSE</option>
-        <option value="ICSE">ICSE</option>
-        <option vlaue="Other">Other</option></select>
-     </span>
-     <span class="choice">
-      <label for="gndr">Gender</label>
-      <select name="gender" id="gndr"  >
-        <option value="male">male</option>
-        <option value="female">female</option>
-        <option vlaue="other">other</option></select>
-      </span>
-      <span class="choice">
-      <label for="cprnd">Cap Round</label>
-      <select name="cap_round" id="cprnd"  >
-        <option value=1>1</option>
-        <option value=2>2</option>
-        <option vlaue=3>3</option></select>
-      </span>
-<span class="choice">
-      <label for="qta">Quota</label>
-      <select name="quota" id="qta"  >
-        <option value="Insti.lvl">Insti.lvl</option>
-        <option vlaue="NEUT">NEUT</option>
-        <option vlaue="OCI">OCI</option>
-        <option vlaue="FN">FN</option>
-        <option vlaue="CIWC">CIWC</option>
-        <option vlaue="ICSE">ICSE</option></select>
-      </span>
-<span class="choice">
-      <label for="st">State</label>
-      <select name="state" id="st"  >
-        <option value="MS">MS</option>
-        <option vlaue="OMS">OMS</option></select>
-      </span>
-
-<span class="choice">
-      <label for="are">Area</label>
-      <select name="area" id="are"  >
-        <option value="rural">rural</option>
-        <option vlaue="urban">urban</option></select>
-      </span>
-
-
-<!--       <label for="brnch">Branch</label>
-      <select name="branch" id="brnch"  >
-        <option value="Computer">Computer Science</option>
-        <option vlaue="IT">IT</option>
-        <option vlaue="ENTC">ENTC</option>
-        <option vlaue="Data Science">Data Science</option></select> --><hr>
-
-      <h4 align="center">Father Information</h4><hr>
-
-      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
-      <input placeholder="Last name..." oninput="this.className = ''" name="last_name">
-      <input placeholder="Father email..." oninput="this.className = ''" name="father_email">
-      <input placeholder="Father occupation..." oninput="this.className = ''" name="father_occupation">
-      <hr>
-      <h4 align="center">Mother Information</h4><hr>
-      <input placeholder="First name..." oninput="this.className = ''" name="first_name">
-      <input placeholder="Last name..." oninput="this.className = ''" name="last_name">
-        <input placeholder="Mother email..." oninput="this.className = ''" name="Mother_email">
-        <input placeholder="Annual Income" oninput="this.className = ''"name='annual income'>
-        <hr>
-    </div>
-    
-    <div class="tab">
-        <h4 align="center">Birth Information</h4><hr>
-      <input placeholder="Date of Birth" oninput="this.className = ''"name='date_of_birth'>
-      <input placeholder="Place of Birth" oninput="this.className = ''"name='place_of_birth'>
-      <input placeholder="Blood group" oninput="this.className = ''"name='Blood_group'>
-      <input placeholder="caste" oninput="this.className = ''"name='caste'>
-      <input placeholder="Religion" oninput="this.className = ''"name='Religion'>
-      <input placeholder="nationality" oninput="this.className = ''"name='nationality'>
-      <hr>
-        <h4 align="center">Contact Information</h4><hr>
-        <input placeholder="Student Mobile No." oninput="this.className = ''"name='Student_mobile'>
-        <input placeholder="Telephone no." oninput="this.className = ''"name='Tele_phone'>
-        <input placeholder="Permanent Address" oninput="this.className = ''"name='permanent_address'>
-        <input placeholder="District" oninput="this.className = ''"name='District'>
-    </div>
-    
-    <div class="tab">Birthday:
-      <p><input placeholder="dd" oninput="this.className = ''"name='J'></p>
-      <p><input placeholder="mm" oninput="this.className = ''"name='K'></p>
-      <p><input placeholder="yyyy" oninput="this.className = ''"name='L'></p>
-    </div>
-    
-    <div class="tab">Login Info:
-      <p><input placeholder="Username..." oninput="this.className = ''"name='M'></p>
-      <p><input placeholder="Password..." oninput="this.className = ''"name='N'></p>
-    </div>
-    
-    <div style="overflow:visible;">
-      <div style="float:right;">
-        <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-        <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+      <div class="bloock">
+      <h4 align="center">Student Information</h4><hr>
+        <input type="text" required placeholder="First name...*" oninput="this.className = ''" name="first_name">
+        <input type="text"  placeholder="Middle name..." oninput="this.className = ''" name="middle_name">   
+        <input type="text"  placeholder="Last name..." oninput="this.className = ''" name="last_name">
+        <input type="number" required minlength="0" maxlength="2" placeholder="Age*" oninput="this.className = ''" name="age">
+        <input type="number" minlength="10" maxlength="10" required placeholder="Student Mobile No.*" oninput="this.className = ''"name='Student_mobile'>
+        <!-- <input type="text" required placeholder="Academic Year*" value="2021-22" oninput="this.className = ''"name='academic_year'> -->
+        <input type="email" required placeholder="Email id*" oninput="this.className = ''"name='email'>
+        
+        <span class="choice">
+          <label for="acd">Academic Year*</label>
+          <select name="academic_year" id="acd"  >
+            <option value="2021-22">2021-22</option></select>
+          </span>
+       <span class="choice">
+        <label for="gndr">Gender*</label>
+        <select name="gender" id="gndr"  >
+          <option value="male">male</option>
+          <option value="female">female</option>
+          <option vlaue="other">other</option></select>
+        </span>
+        <span class="choice">
+        <label for="brnch">Branch*</label>
+        <select name="branch" id="brnch"  >
+          <option value="Computer">Computer Science</option>
+          <option vlaue="IT">IT</option>
+          <option vlaue="ENTC">ENTC</option>
+          <option vlaue="Data Science">Data Science</option></select>
+        </span>
+        <span class="choice">
+          <label for="cprnd">Cap Round*</label>
+          <select name="cap_round" id="cprnd"  >
+            <option value=1>0</option>
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option vlaue=3>3</option></select>
+          </span>
+        <span class="choice" data-show-if="cap_round:0">
+        <label for="qta">Quota*</label>
+        <select name="quota" id="qta"  >
+          <div  data-hide-if="cap_round:0">
+          <option value="Insti.lvl">Insti.lvl</option>
+          <option vlaue="NEUT">NEUT</option>
+          <option vlaue="OCI">OCI</option>
+          <option vlaue="FN">FN</option>
+          <option vlaue="CIWC">CIWC</option>
+        </div>
+          <option vlaue="TFWS">TFWS</option>
+          <option vlaue="EWS">EWS</option>
+          <option vlaue="DEF">DEF</option>
+        </select>
+        </span>
       </div>
-    </div>
-    
-    <!-- Circles which indicates the steps of the form: -->
-    <div style="text-align:center;margin-top:40px;">
-      <span class="step"></span>
-      <span class="step"></span>
-      <span class="step"></span>
-      <span class="step"></span>
-    </div>
+        <hr>
+        <div class="bloock">
+        <h4 align="center">Father Information</h4><hr>
+  
+        <input type="text" required placeholder="Father's First name...*" oninput="this.className = ''" name="father_first_name">
+        <input type="text"  placeholder="Father's Middle name..." oninput="this.className = ''" name="father_middle_name">
+        <input type="text"  placeholder="Father's Last name..." oninput="this.className = ''" name="father_last_name">
+        <input type="email" required placeholder="Father email...*" oninput="this.className = ''" name="father_email">
+        <input type="number" minlength="10" maxlength="10" required placeholder="Father's Mobile Number...*" oninput="this.className = ''" name="father_mobile">
+        <input type="text" required placeholder="Father occupation...*" oninput="this.className = ''" name="father_occupation">
+      </div>
+        <hr>
+  <div class="bloock">
+        <h4 align="center">Mother Information</h4><hr>
+        <input type="text" required placeholder="Mother's First name...* " oninput="this.className = ''" name="mother_first_name">    
+        <input type="text" placeholder="Mother's Middle name..." oninput="this.className = ''" name="mother_middle_name">  
+        <input type="text"  placeholder="Mother's Last name..." oninput="this.className = ''" name="mother_last_name">
+        <input type="number" minlength="10" maxlength="10" required placeholder="Mother's mobile number...*" oninput="this.className = ''" name="mother_mobile">
+        <input type="email" required placeholder="Mother email...*" oninput="this.className = ''" name="mother_email">
+        <input type="number" minlength="0" maxlength="100" required placeholder="Annual Income*" oninput="this.className = ''"name='annual_income'>
+        </div>
+        
+        
+        <hr>
+        
+      </div>
+      
+      <div class="tab">
+  <div class="bloock">
+          <h4 align="center">Birth Information</h4><hr>
+          <span class="choiced"><label for="date_of_birth" >Date of Birth*</label><input type="date" required placeholder="Date of Birth*" oninput="this.className = ''" name="date_of_birth"></span>       
+          <input type="text" required placeholder="Place of Birth*" oninput="this.className = ''"name='place_of_birth'>
+        <input type="text" maxlength="3" required placeholder="Blood group*" oninput="this.className = ''"name='Blood_group'>
+        <input type="text" required placeholder="caste*" oninput="this.className = ''"name='caste'>
+        <input type="text" required placeholder="Sub caste*" oninput="this.className = ''"name='subcaste'>
+        <input type="text" required placeholder="Religion*" oninput="this.className = ''"name='Religion'>
+        <input type="text" required placeholder="Domicile*" oninput="this.className = ''"name='domicile'>
+        <input type="text" required placeholder="nationality*" oninput="this.className = ''"name='nationality'>
+      </div>
+        <hr>
+  <div class="bloock">
+          <h4 align="center">Contact Information</h4><hr>
+        <input type="number" minlength ="12" maxlength="12" required placeholder="Aadhar Number*" oninput="this.className = ''"name='aadhar_no'>
+        <input type="number" minlength="10" maxlength="10" required placeholder="Mobile Number*" oninput="this.className = ''"name='mobile_number'>
+          
+        <input type="number" minlength="10" maxlength="10" placeholder="Telephone no." oninput="this.className = ''"name='Tele_phone'>
+          <input type="text" required placeholder="District*" oninput="this.className = ''"name='District'>
+          <input type="text" required placeholder="Country*" oninput="this.className = ''" name="country">
+          <input type="number" minlenght="6" maxlength="6" required placeholder="Pin Code*" oninput="this.className = ''" name="pin_code">
+          <span class="choice">
+            <label for="st">State*</label>
+            <select name="state" id="st"  >
+              <option value="MS">MS</option>
+              <option vlaue="OMS">OMS</option></select>
+            </span>
+          <span class="choice">
+            <label for="are">Area*</label>
+            <select name="area" id="are"  >
+              <option value="rural">rural</option>
+              <option vlaue="urban">urban</option></select>
+            </span>
+            <span class="choice"><textarea required placeholder="Permanent Address*" oninput="this.className = ''"name='permanent_address'></textarea></span>
+  
+            <span class="choice"><textarea required placeholder="Local Address*" oninput="this.className = ''"name='local_address'></textarea></span>
+          
+  
+  
+            </div>        
+      </div>
+      
+      <div class="tab">
+  <div class="bloock">
+        <h4 align="center">Academic Information</h4><hr>
+        <input type="" required placeholder="HSC Board Marks*" oninput="this.className = ''" name="HSC_board_marks">
+        <!-- <input type="" required placeholder="SSC Board Marks" oninput="this.className = ''" name="SSC_board_marks"> -->
+        <input type="text" required placeholder="College Name*" oninput="this.className = ''" name="college_name">
+        <input type="text" required placeholder="College address*" oninput="this.className = ''" name="college_address">
+        <input type="number" minlength="0" maxlength="10" required placeholder="JEE Percentile*" oninput="this.className = ''" name="Jee_main_percentile">
+        <input type="number" minlength="0" maxlength="10" required placeholder="JEE Advanced Percentile*" oninput="this.className = ''" name="Jee_adv_percentile">
+        <input type="number" minlength="0" maxlength="10" required placeholder="HSC pcm total*" oninput="this.className = ''"name='HSC_pcm'>
+        <input type="number" minlength="0" maxlength="10" required placeholder="MHTCET Percentile*" oninput="this.className = ''" name="MHTCET_percentile">
+        <!-- <input type="text" required placeholder="Category*" oninput="this.className = ''" name="category"> -->
+        <input type="text" required placeholder="Name as per last marksheet...*" oninput="this.className = ''" name="marksheet_name">
+        <input type="text" required placeholder="Seat Type..*" oninput="this.className = ''" name="seat_type">
+        
+        <input type="text" required placeholder="Academic Year*" oninput="this.className = ''" name="academic_year">
+        <span class="choiced"><label for="passing_year" >Passing Year*</label><input type="date" required placeholder="passing year*" oninput="this.className = ''" name="passing_year"></span>
+        <span class="choice">
+          <label for="brd">SSC BOARD*</label>
+          <select name="SSC_board" id="brd"  >
+            <option value="maharashtra">Maharashtra</option>
+            <option value="CBSE">CBSE</option>
+            <option value="ICSE">ICSE</option>
+            <option vlaue="Other">Other</option></select>
+         </span>
+         <span class="choice">
+         <label for="brd2">HSC BOARD*</label>
+         <select name="HSC_board" id="brd2"  >
+           <option value="maharashtra">Maharashtra</option>
+           <option value="CBSE">CBSE</option>
+           <option value="ICSE">ICSE</option>
+           <option vlaue="Other">Other</option></select>
+        </span>
+            <span class="choice">
+            <label for="f_attempt">First Attempt*</label>
+            <select name="first_attempt" id="f_attempt"  >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option></select>
+            </span>
+            <span class="choice">
+              <label for="ctgry">Category*</label>
+              <select name="category" id="ctgry"  >
+                <option value=2>general</option>
+                <option value=1>SC</option>
+                <option value=2>ST</option>
+                <option value=2>OBC</option>
+                <option vlaue=3>VJNT</option></select>
+              </span>
+              <span class="choice"> <textarea placeholder="Other Information.. " oninput="this.className = ''" name="other_info"></textarea></span>
+          </div>
+      </div>
+      
+      
+      <div style="overflow:visible;">
+        <div style="float:right;">
+          <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous  </button>
+          <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+        </div>
+      </div>
+      
+      <!-- Circles which indicates the steps of the form: -->
+      <div style="text-align:center;margin-top:40px;">
+        <span class="step"></span>
+        <span class="step"></span>
+        <span class="step"></span>
+  
+      </div>
+  
     </form>
     <script src="{% static 'FormScript.js' %}"></script>
 </body>

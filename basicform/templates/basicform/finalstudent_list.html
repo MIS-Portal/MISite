@@ -1,4 +1,9 @@
 {%load static%}
+{%load customtags%}
+{%if request.user.is_authenticated and request.user|has_group:"Administrator" %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
 <style>
     .home {
     background-color: #FFFDD0;
@@ -6,16 +11,46 @@
     padding: 110px 0;
     text-align: center;
     width: 90%;
-    font-family: Raleway;
+    font-family: 'Arvo', serif;
     align-items: center;
   }
-  h3{
-    color: blue;
+  .heading{
+  display:inline-block;
+}
+img{
+    /* display: block; */
+    width: 60;
+    /* height: fit-content; */
+    margin: -60px 30px;
+    position: absolute;
+    /* top: 497px; */
+    /* bottom: 0px; */
+    float: left;
+}
+h3{
+  color: blue;
+    /* margin-left: auto; */
+    width: 50%;
+    margin: -50px 180px 30px;
+    font-size: 30px;
+    float: right;
   }
   table{
+    /* overflow-y:scroll; */
     width:50%;
-  transform: translate(50%,0%);
+    font-family: 'Times New Roman', Times, serif;
+    /* padding: 10%; */
+  /* transform: translate(50%,0%); */
 }
+.tab{
+    overflow-y: scroll;
+    width: 260px;
+    height: 286px;
+    /* margin-bottom: 24px; */
+    /* padding: 66px; */
+    margin: auto;
+  }
+
  tr:nth-child(even){background-color: #f2f2f2;}
 
 tr:hover {background-color: #ddd;}
@@ -84,7 +119,11 @@ button {
 </script>
 <div class="home">
 <span id="tablee">
-<h2>Students</h2>
+  <div class="heading">
+    <h3>Final Student List</h3>
+    <img src="{% static 'PICT-Logo.png' %}">
+  </div>
+  <div class="tab">
         <table >
             <tr><th>Student name</th><th>Branch</th><th>Registration Number</th></tr>
         {% for student in object_list %}
@@ -95,6 +134,7 @@ button {
             </tr>
         {% endfor %}
     </table>
+  </div>
 </span>
 <script>function downloadPDF() {
     var doc = new jsPDF('p', 'pt', 'a4');
@@ -112,3 +152,8 @@ button {
   <button onclick="demoFromHTML()">Download PDF</button>
   <a href="{%url 'index' %}">Go to Home</a>
 </div>
+
+{%else%}
+<h2>Administrative permission needed</h2>
+<a href="{%url 'login'%}">Login</a>
+{%endif%}

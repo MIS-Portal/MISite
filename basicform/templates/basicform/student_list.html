@@ -1,0 +1,168 @@
+{%load static%}
+{%load customtags%}
+{%if request.user.is_authenticated %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<style>
+    .home {
+    background-color: #FFFDD0;
+    margin: 50px auto;
+    padding: 110px 0;
+    text-align: center;
+    width: 90%;
+    font-family: 'Arvo', serif;
+    align-items: center;
+  }
+
+
+  img{
+    margin: 0px 0px 0px;
+    float:left;
+  }
+
+ tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+ th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #7484e2;
+  color: white;
+}
+button {
+  background-color: #7272dc;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin:20px;
+  cursor: pointer;
+}
+.heading{
+  display:inline-block;
+}
+td{
+  height: 60px;
+}
+img{
+    /* display: block; */
+    width: 60;
+    /* height: fit-content; */
+    margin: -60px 30px;
+    position: absolute;
+    /* top: 497px; */
+    /* bottom: 0px; */
+    float: left;
+}
+h3{
+  color: blue;
+    /* margin-left: auto; */
+    width: 50%;
+    margin: -50px 180px 30px;
+    font-size: 30px;
+    float: right;
+  }
+  table{
+    /* overflow-y:scroll; */
+    width:50%;
+    font-family: 'Times New Roman', Times, serif;
+    /* padding: 10%; */
+  /* transform: translate(50%,0%); */
+}
+.tab{
+    overflow-y: scroll;
+    width: 384px;
+    height: 455px;
+    /* margin-bottom: 24px; */
+    /* padding: 66px; */
+    margin: auto;
+  }
+
+  </style>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script>
+    function demoFromHTML() {
+        var pdf = new jsPDF('p', 'pt', 'letter');
+        // source can be HTML-formatted string, or a reference
+        // to an actual DOM element from which the text will be scraped.
+        source = $('#tablee')[0];
+
+        // we support special element handlers. Register them with jQuery-style 
+        // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+        // There is no support for any other type of selectors 
+        // (class, of compound) at this time.
+        specialElementHandlers = {
+            // element with id of "bypass" - jQuery style selector
+            '#bypassme': function (element, renderer) {
+                // true = "handled elsewhere, bypass text extraction"
+                return true
+            }
+        };
+        margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+        // all coords and widths are in jsPDF instance's declared units
+        // 'inches' in this case
+        pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
+
+            function (dispose) {
+                // dispose: object with X, Y of the last line add to the PDF 
+                //          this allow the insertion of new lines after html
+                pdf.save('Test.pdf');
+            }, margins
+        );
+    }
+</script>
+<div class="home">
+<span id="tablee">
+  <div class="heading">
+    <h3>Pending Students</h3>
+    <img src="{% static 'PICT-Logo.png' %}">
+  </div>
+  <div class="tab">
+        <table >
+            <tr><th>Student name</th><th>Uid</th></tr>
+        {% for student in object_list %}
+            <tr>
+                <td>{{student.first_name}} {{student.last_name}}</td>
+                <td><a href="/basicform/misadmin" onclick="location.href=this.href+'/{{student.id}}';return false;">{{student.id}}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+  </div>
+</span>
+<script>function downloadPDF() {
+    var doc = new jsPDF('p', 'pt', 'a4');
+  
+    doc.html(document.querySelector('tablee'), {
+      callback: function (doc) {
+        doc.save('Students.pdf');
+      },
+      margin: [60, 60, 60, 60],
+      x: 32,
+      y: 32,
+    });
+  }
+  </script>
+  <button onclick="demoFromHTML()">Download PDF</button>
+  <a href="{%url 'index' %}">Go to Home</a>
+</div>
+{%else%}
+<h2>Administrative permission needed</h2>
+<a href="{%url 'login'%}">Login</a>
+{%endif%}

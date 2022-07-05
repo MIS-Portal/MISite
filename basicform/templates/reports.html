@@ -1,0 +1,212 @@
+{%load static%}
+{%load customtags%}
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<style>
+    .home {
+    background-color: #FFFDD0;
+    margin: 50px auto;
+    padding: 110px 0;
+    text-align: center;
+    width: 90%;
+    font-family: 'Arvo', serif;
+    align-items: center;
+  }
+  h2{
+    color: blue;
+  }
+  td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.heading{
+  display:inline-block;
+}
+img{
+
+    /* display: block; */
+    width: 60;
+    /* height: fit-content; */
+    margin: -60px 30px;
+    position: absolute;
+    /* top: 497px; */
+    /* bottom: 0px; */
+    float: left;
+}
+h3{
+  color: blue;
+    /* margin-left: auto; */
+    width: 50%;
+    margin: -50px 180px 30px;
+    font-size: 30px;
+    float: right;
+  }
+  table{
+    /* overflow-y:scroll; */
+    width:50%;
+    font-family: 'Times New Roman', Times, serif;
+    /* padding: 10%; */
+  /* transform: translate(50%,0%); */
+}
+.tab{
+    overflow-y: scroll;
+    width:1100px;
+    height: 400px;
+    /* margin-bottom: 24px; */
+    /* padding: 66px; */
+    margin: auto;
+  }
+
+ tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+ th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #7484e2;
+  color: white;
+}
+button {
+  background-color: #7272dc;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin:1%;
+  cursor:pointer;
+}
+#add{
+  float:right;
+}
+#remove{
+  transform: translate(0%,-45%);
+  float:left;
+}
+  </style>
+<div class="home">
+    <div class="heading">
+      <h3>Student Report</h3>
+      <img src="{% static 'PICT-Logo.png' %}">
+    </div>
+<div class="tab">
+<table>
+    <tr>
+      <th><input type="checkbox" class="chall" onclick="selectall()"></th>
+    {%for j in q.first%}
+    {%if j != "id"%}
+    <th>{{j}}</th>
+    {%endif%}
+    {%endfor%}
+    </tr>
+{%for i in q%}
+<tr>
+<td><input type="checkbox" class='scndry'></td>
+{%for key,value in i.items%}
+{%if key != "id"%}
+<td>{{value}}</td>
+{%endif%}
+{%endfor%}
+</tr>
+{%endfor%}
+</table>
+</div>
+<button type="button" onclick="tableToCSV()">Download CSV</button>
+
+
+<script>
+
+  function tableToCSV() {
+
+// Variable to store the final csv data
+var csv_data = [];
+
+// Get each row data
+var rows = document.getElementsByTagName('tr');
+var headcol=rows[0].querySelectorAll('td,th')
+  var headrow=[]
+  for(var i=1;i<headcol.length;i++){
+    headrow.push(headcol[i].innerHTML)
+  }
+  csv_data.push(headrow.join(","))
+  
+for (var i = 0; i < rows.length; i++) {
+  // Get each column data
+
+  var s=rows[i].querySelectorAll('input[type="checkbox"]:checked');
+  if(s.length!=0){
+  var cols = rows[i].querySelectorAll('td,th');
+  // Stores each csv row data
+  var csvrow = [];
+  for (var j = 1; j < cols.length; j++) {
+
+    // Get the text data of each cell of
+    // a row and push it to csvrow
+    csvrow.push(cols[j].innerHTML);
+  
+  }
+
+  // Combine each column value with comma
+  csv_data.push(csvrow.join(","));
+}
+}
+// combine each row data with new line character
+csv_data = csv_data.join('\n');
+
+/* We will use this function later to download
+the data in a csv file downloadCSVFile(csv_data);
+*/
+downloadCSVFile(csv_data)
+// }
+}
+function downloadCSVFile(csv_data) {
+// Create CSV file object and feed our
+// csv_data into it
+CSVFile = new Blob([csv_data], { type: "text/csv" });
+
+// Create to temporary link to initiate
+// download process
+var temp_link = document.createElement('a');
+
+// Download csv file
+temp_link.download = "StudentReport.csv";
+var url = window.URL.createObjectURL(CSVFile);
+temp_link.href = url;
+
+// This link should not be displayed
+temp_link.style.display = "none";
+document.body.appendChild(temp_link);
+
+// Automatically click the link to trigger download
+temp_link.click();
+document.body.removeChild(temp_link);
+}
+
+
+
+function selectall(){
+  var s=document.getElementsByClassName('chall')
+  var t=document.getElementsByClassName('scndry')
+
+  if(s[0].checked==true){
+    for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=true;
+    }
+  }
+}
+else{
+  for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=false;
+    }
+  }
+}
+}
+</script>
+</body>
