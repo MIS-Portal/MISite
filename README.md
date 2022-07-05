@@ -1,5 +1,5 @@
 # MISite
-Clone of mis portal
+
 Clone the Repository by using
 
 `git clone https://github.com/MIS-Portal/MISite`
