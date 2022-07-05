@@ -11,6 +11,9 @@ urlpatterns = [
     path('logoutuser/',views.logoutUser,name='logout'),
     path('showstudents/',DisplayFStudent.as_view(),name='studentlist'),
     path('generatereports/',views.GenerateReports,name='generaterprts'),
+    path('removestudent/',views.RemoveStudent,name='rmvstudent'),
     re_path(r'misadmin/(?P<hkey>.{27})',views.find_student,name='fstudent'),
+    re_path(r'showstudents/(?P<hkey>.{11})',views.find_final_student,name='fstudent'),
+    re_path(r'removestudent/(?P<rollno>.{11})',views.FinalRemove,name='fremove'),
     # path('showstudent/',views.showstudent,name='showstudent')
 ]
