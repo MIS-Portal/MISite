@@ -68,16 +68,13 @@ h3{
     float: right;
   }
   table{
-    /* overflow-y:scroll; */
-    width:50%;
     font-family: 'Times New Roman', Times, serif;
-    /* padding: 10%; */
-  /* transform: translate(50%,0%); */
+
 }
 .tab{
     overflow-y: scroll;
-    width: 384px;
-    height: 455px;
+    width: fit-content;
+    height: 545px;
     /* margin-bottom: 24px; */
     /* padding: 66px; */
     margin: auto;
@@ -136,7 +133,7 @@ h3{
   </div>
   <div class="tab">
         <table >
-            <tr><th>Student name</th><th>Uid</th></tr>
+            <tr><th>Student name + Surname</th><th>Uid</th></tr>
         {% for student in object_list %}
             <tr>
                 <td>{{student.first_name}} {{student.last_name}}</td>

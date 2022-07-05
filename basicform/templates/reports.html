@@ -44,8 +44,6 @@ h3{
     float: right;
   }
   table{
-    /* overflow-y:scroll; */
-    width:50%;
     font-family: 'Times New Roman', Times, serif;
     /* padding: 10%; */
   /* transform: translate(50%,0%); */
@@ -53,7 +51,7 @@ h3{
 .tab{
     overflow-y: scroll;
     width:1100px;
-    height: 400px;
+    height: 545px;
     /* margin-bottom: 24px; */
     /* padding: 66px; */
     margin: auto;
@@ -117,7 +115,7 @@ button {
 </table>
 </div>
 <button type="button" onclick="tableToCSV()">Download CSV</button>
-
+<a href="{%url 'index' %}">Go to Home</a>
 
 <script>
 

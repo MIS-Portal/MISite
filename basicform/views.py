@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.views import View
 from .forms import AdminForm
 # from formtools.wizard.views import SessionWizardView
-from .models import Student,FinalStudent
+from .models import Student,FinalStudent,DeletedStudent
 from django.template import loader
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
@@ -18,24 +18,8 @@ def index(request):
     return render(request,'basicform/index.html')
 class ShowPending(ListView):
     model=Student
-# class StudentWizard(SessionWizardView):
-#     # def get_template_names(self):
-#     #     return [TEMPLATES[self.steps.current]]
-#     template_name='student_form.html'
-#     def done(self,form_list,**kwargs):
-#         form_data=process_form_data(form_list)
-#         fdict={}
-#         for i in form_data:
-#             for j in i:fdict[j]=i[j]
-#         s=Student(**fdict)
-#         s.save()
-#         jkey=s.id
-#         return render(None,'done.html',{'form_data':form_data,'key':jkey})
-def process_form_data(form_list):
-    form_data=[form.cleaned_data for form in form_list]
-    return form_data
 def find_student(request,hkey):
-    if  not request.user.is_authenticated and not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
     try:
         s=Student.objects.get(pk=hkey)
         dic=model_to_dict(s)
@@ -50,17 +34,17 @@ def find_student(request,hkey):
                 if f.branch=='Data Science':st=st+'D2K22'
                 if f.branch=='IT':st=st+'I2K22'
                 if f.branch=='ENTC':st=st+'E2K22'
-                st=st+str(f.id+1000000)
+                st=st+str(f.id+100000)
                 f.reg_no=st
                 f.save()
-                print('hello',f.id)
                 dict=model_to_dict(f)  
                 
                 context={'dict':dict}
                 return render(request,'FinalStudent.html',context)     
             if 'remove' in request.POST:
                 Student.objects.filter(id=hkey).delete()
-                return HttpResponse('Student Removed')
+                messages.success(request,"Student removed successfully")
+                return redirect('index')
         context={'dic':dic,'hkey':hkey}
         return render(request,'showstudent.html',context)
     except Student.DoesNotExist:
@@ -81,7 +65,6 @@ def testrun(request):
     if request.user.is_authenticated:
         if request.method=='POST':
             fdict=dict(request.POST.items())
-            print(fdict)
             fdict.pop('csrfmiddlewaretoken')
             s=Student(**fdict)
             s.save()
@@ -93,7 +76,7 @@ def testrun(request):
         return render(request,'Formtest.html')
     else: return redirect('login')
 def ViewForm(request):
-    if  not request.user.is_authenticated and not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
     try:
         return render(request,'done.html',cdict)
     except:
@@ -115,6 +98,7 @@ def logoutUser(request):
     messages.success(request,"YOU WERE LOGGED OUT SUCCESSFULLY!")
     return redirect('index')
 def GenerateReports(request):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
     if request.method=="POST":
         acyr=request.POST['academic_year']
         brnch=request.POST['branch']
@@ -131,7 +115,41 @@ def GenerateReports(request):
 
         return render(request,'reports.html',{'q':q})
     return render(request,'generatereports.html')
+def RemoveStudent(request):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    if request.method=="POST":
+        rollno=request.POST['rollno']
+        return HttpResponseRedirect(rollno)
+    return render(request,'removestudent.html')
+def FinalRemove(request,rollno):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    try:
+        f=FinalStudent.objects.get(reg_no=rollno)
+        dic=model_to_dict(f)
+        if request.method=='POST':
+            fdict=dict(request.POST.items())
+            print(fdict)
+            if 'remove' in request.POST:
+                dic.pop('id')
+                d=DeletedStudent(**dic)
+                d.reason=request.POST['reason']
+                d.save()
+                f.delete() 
+                messages.success(request,"Student removed successfully")
+                return redirect('index')     
+        context={'dic':dic,'name':f.first_name+" "+f.last_name,'roll':rollno}
+        return render(request,'finalremove.html',context)
+    except FinalStudent.DoesNotExist:
+        return HttpResponse("No object")
 class DisplayFStudent(ListView):
     model=FinalStudent
-
-        
+def find_final_student(request,hkey):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    try:
+        s=FinalStudent.objects.get(reg_no=hkey)
+        dic=model_to_dict(s)
+        dic.pop('id')
+        context={'dic':dic,'hkey':hkey}
+        return render(request,'showfinalstudent.html',context)
+    except Student.DoesNotExist:
+        return HttpResponse("No object")
