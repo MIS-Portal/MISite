@@ -19,13 +19,14 @@
 
 <div class="home">
   <div class="heading">
-    <h3>Enter Uid</h3>
+    <h3>Enter Registration Number</h3>
     <img src="{% static 'PICT-Logo.png' %}">
   </div>
 <hr>
 <form action=""method="POST">
     {% csrf_token %}
-    {{form}}
-    <input type="submit" id="submit"></form>
+    <input type="text" placeholder="Registration Number" name="rollno">
+    <input type="submit" id="submit">
+  </form>
     <a href="{%url 'index' %}">Go to Home</a>
 </div>

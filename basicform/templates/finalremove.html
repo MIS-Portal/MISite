@@ -8,15 +8,31 @@
 
 <div class="home">
   <div class="heading">
-    <h3>Student Added Successfully!</h3>
+    <h3>Delete Student</h3>
     <img src="{% static 'PICT-Logo.png' %}">
   </div>
-<hr>Student Data:
+<hr>
 <div class="tab">
 <table>
     <tr><th>Feild</th><th>Value</th></tr>
-{%for key,value in dict.items%}<tr><td>{{key}}</td><td>{{value}}</td></tr>{%endfor%}
+{%for key,value in dic.items%}<tr><td>{{key}}</td><td>{{value}}</td></tr>{%endfor%}
 </table>
 </div>
+<form action="" method="POST" id="remove_form">
+    {% csrf_token %}
+    <input hidden name="remove" id="remove">
+    <input hidden id="reason" name="reason" type="text">
+    <button onclick="event.preventDefault();AlertMessage()">Remove</button>
+</form>
 <a href="{%url 'index' %}">Go to Home</a>
 </div>
+<script>
+    function AlertMessage(){
+        let reason=prompt("Reason for deleting {{name}}")
+        if(reason!=null){
+            document.getElementById('reason').value=reason
+            document.getElementById('remove').value="remove"
+            document.getElementById('remove_form').submit()
+        }
+    }
+</script>

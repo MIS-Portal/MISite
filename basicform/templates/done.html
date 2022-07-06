@@ -1,64 +1,11 @@
 {%load static%}
-
+{%load customtags%}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
-<style>
-    .home {
-    background-color: #FFFDD0;
-    margin: 50px auto;
-    padding: 110px 0;
-    text-align: center;
-    width: 90%;
-    font-family:'Arvo', serif;
-    align-items: center;
-  }
-  h3{
-  color: blue;
-    /* margin-left: auto; */
-    width: 50%;
-    margin: -50px 180px 30px;
-    font-size: 30px;
-    float: right;
-  }
-  .heading{
-  display:inline-block;
-}
-img{
-    /* display: block; */
-    width: 60;
-    /* height: fit-content; */
-    margin: -60px 30px;
-    position: absolute;
-    /* top: 497px; */
-    /* bottom: 0px; */
-    float: left;
-}
-  td, th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
 
-.tab{
-    overflow-y: scroll;
-    width: fit-content;
-    height: 545px;
-    /* margin-bottom: 24px; */
-    /* padding: 66px; */
-    margin: auto;
-  }
- tr:nth-child(even){background-color: #f2f2f2;}
-
-tr:hover {background-color: #ddd;}
-
- th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #7484e2;
-  color: white;
-}
-  </style>
   <div class="home">
     <div class="heading">
       <h3>Submitted Successfully!</h3>

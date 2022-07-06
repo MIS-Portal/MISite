@@ -119,6 +119,7 @@ def RemoveStudent(request):
     if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
     if request.method=="POST":
         rollno=request.POST['rollno']
+        print(rollno)
         return HttpResponseRedirect(rollno)
     return render(request,'removestudent.html')
 def FinalRemove(request,rollno):
@@ -149,6 +150,17 @@ def find_final_student(request,hkey):
         s=FinalStudent.objects.get(reg_no=hkey)
         dic=model_to_dict(s)
         dic.pop('id')
+        context={'dic':dic,'hkey':hkey}
+        return render(request,'showfinalstudent.html',context)
+    except Student.DoesNotExist:
+        return HttpResponse("No object")
+class DisplayDeleted(ListView):
+    model=DeletedStudent
+def find_deleted_student(request,hkey):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    try:
+        s=DeletedStudent.objects.get(reg_no=hkey)
+        dic=model_to_dict(s)
         context={'dic':dic,'hkey':hkey}
         return render(request,'showfinalstudent.html',context)
     except Student.DoesNotExist:
