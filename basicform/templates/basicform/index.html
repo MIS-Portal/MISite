@@ -19,7 +19,7 @@
 h3{
   color: blue;
     /* margin-left: auto; */
-    margin: -80px 80px 0px;
+    margin: -55px 100px 0px;
     font-size: 40px;
     float: left;
 }
@@ -135,7 +135,7 @@ button.log {
     transition: all 0.3 ease;
     cursor: pointer;
     float: right;
-    margin: -80px 10px 0px;
+    margin: -55px 10px 0px;
   }
 </style>
 <div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
@@ -169,9 +169,11 @@ button.log {
   <!-- </ul> -->
   <!-- <ul> -->
     <a href="{%url 'showpending'%}"><button class="act">Show Pending</button></a>
-    <a href="{%url 'generaterprts'%}"><button class="act">Generate Reports</button></a>
+    <a href="{%url 'studentrecords'%}"><button class="act">Student Records</button></a>
     <a href="{%url 'rmvstudent'%}"><button class="act">Remove Student &#9888;</button></a>
     <a href="{%url 'delstudentlist'%}"><button class="act">Deletion History</button></a>
+    <a href="{%url 'ucsv'%}"><button class="act">Upload Existing Student Data</button></a>
+
 
     <!-- </ul> -->
   {%endif%}
@@ -188,9 +190,11 @@ button.log {
   <li><strong>Check Student: </strong>Search for Student with Uid,verify and add or remove</li>
   <li><strong>Student List: </strong>List of All registered Students</li>
   <li><strong>Show Pending: </strong>Show Pending Student Verifications</li>
-  <li><strong>Generate Reports: </strong>Get filter-wise Reports in csv</li>
+  <li><strong>Student Records: </strong>Get filter-wise Records in csv</li>
   <li><strong>Remove Student : </strong>Remove a Registered Student</li>
   <li><strong>Deletion History: </strong>List of Deleted Students</li>
+  <li><strong>Upload Existing Student Data: </strong>Upload Student data in csv Format to add in database</li>
+
  </div>
 {%else%}
 <div class="container1">

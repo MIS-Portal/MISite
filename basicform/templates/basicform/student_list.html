@@ -28,6 +28,7 @@ h3{
 <div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
 
 <div class="home">
+
 <span id="tablee">
   <div class="heading">
     <h3>Pending Students</h3>

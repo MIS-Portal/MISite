@@ -104,7 +104,7 @@ class FinalStudent(models.Model):
     branch_list=[('Computer','Computer'),('Data Science','Data Science'),('IT','IT'),('ENTC','ENTC')]
     yesno_list=[('Yes','Yes'),('No','No')]
     category_list=[('SC','SC'),('ST','ST'),('OBC','OBC'),('general','general'),('VJNT','VJNT')]
-    reg_no=models.CharField(max_length=20,default='NULL')
+    reg_no=models.CharField(max_length=20,default='NULL',unique=True)
     id=models.AutoField(primary_key=True)
     #  gender_list=[('M','male'),('F','female'),('O','other')]
     first_name=models.CharField(max_length=200,default='o')

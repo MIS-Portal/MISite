@@ -14,17 +14,32 @@
     font-family: 'Arvo', serif;
     align-items: center;
   }
+  .checkfields{
+  display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: center;
+  }
+  .ck{
+    display: flex;
+    width: 350px;  }
+    .selectall{
+    display: flex;
+    width: 320px; 
+  padding: 10px; }
   </style>
 <div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
 
 <div class="home">
   <div class="heading">
-    <h3>Choose Filters</h3>
+    <h3>Choose Options</h3>
     <img src="{% static 'PICT-Logo.png' %}">
   </div>
 <hr>
 <form action="" method="POST">
     {% csrf_token %}
+    <h4>Select Search filter</h4>
+    <hr>
     <div class="line">
     <span class="choice">
         <label for="acdyr">Academic Year*</label>
@@ -50,8 +65,43 @@
                   <option value="OBC">OBC</option>
                   <option vlaue="VJNT">VJNT</option></select>
                 </span> 
+              </div>
+              <hr>
+              <h4>Select Feilds</h4>
+              <hr>
+              <div class="selectall"><input class="sall" type="checkbox" onclick="Selection()">Select All</div>
+              <hr>
+              <div class="checkfields">
+                {%for i in fslist%} 
+                {%if i == 'academic_year' or i == 'branch' or i == 'category'%}
+                
+                <div class="ck"><input class="ckl" type="checkbox" name="{{i}}+1">{{i}}</div>
+                {%else%}
+                <div class="ck"><input class="ckl" type="checkbox" name={{i}}>{{i}}</div>
+                {%endif%}
+                
+                {%endfor%}
+
               </div> 
     <input type="submit" id="submit">
   </form>
     <a href="{%url 'index' %}">Go to Home</a>
 </div>
+<script>
+  function Selection(){
+
+    var sel= document.getElementsByClassName("sall")
+    var al=document.getElementsByClassName("ckl")
+    // console.log(sel[0].checked)
+    if(sel[0].checked==true){
+      for(var i=0;i<al.length;i++){
+        al[i].checked=true;
+      }
+    }
+    else{
+      for(var i=0;i<al.length;i++){
+        al[i].checked=false;
+      }
+    }
+  }
+</script>

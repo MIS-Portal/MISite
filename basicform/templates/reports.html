@@ -13,6 +13,9 @@
     height: 545px;
     margin: auto;
   }
+  input{
+    margin: 15px;
+  }
   </style>
 <div class="name">User: {{user.get_username}} | Date: {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
 
@@ -35,9 +38,9 @@
 <tr>
 <td><input type="checkbox" class='scndry'></td>
 {%for key,value in i.items%}
-{%if key != "id"%}
+
 <td>{{value}}</td>
-{%endif%}
+
 {%endfor%}
 </tr>
 {%endfor%}

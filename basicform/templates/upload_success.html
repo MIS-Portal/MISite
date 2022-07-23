@@ -1,0 +1,20 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+
+  <div class="home">
+    <div class="heading">
+      <h3>Upload Csv file of Existing Students</h3>
+      <img src="{% static 'PICT-Logo.png' %}">
+    </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <input type="file" accept=".xls,.xlsx" name="ucsv" value="ucsv">Upload Csv
+        <button type="submit">submit
+    </form>
+    <a href="{%url 'index' %}">Go to Home</a>
+    </div>

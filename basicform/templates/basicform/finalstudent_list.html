@@ -22,8 +22,13 @@ h3{
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 <div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
-
+{% if messages %}
+{%for message in messages%}
+{{message}}
+{%endfor%}
+{% endif %}
 <div class="home">
+
 <span id="tablee">
   <div class="heading">
     <h3>Final Student List</h3>
