@@ -10,8 +10,10 @@ from django.contrib import messages
 from django.views import View
 from .forms import AdminForm
 from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 # from formtools.wizard.views import SessionWizardView
-from .models import Student,FinalStudent,DeletedStudent
+from .models import Student,FinalStudent,DeletedStudent,Branch,Clss
+from .models import Division,Subject,FPost,Faculty
 from django.template import loader
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
@@ -54,6 +56,7 @@ def misadmin(request):
     if request.user.is_authenticated and request.user.groups.filter(name='Administrator').exists():
         form=AdminForm()
         if request.method=='POST':
+            print(list(request.POST.items()))
             form=AdminForm(request.POST)
             if form.is_valid():
                hkey=form.cleaned_data['uid']
@@ -111,21 +114,21 @@ def GenerateReports(request):
         if 'academic_year+1' in plist: field_list.append('academic_year')
         if 'category+1' in plist:field_list.append('category')
         if 'branch+1' in plist:field_list.append('branch')
-        print(dict(request.POST.items()))
-        print(field_list)
+        # print(dict(request.POST.items()))
+        # print(field_list)
         acyr=request.POST['academic_year']
         brnch=request.POST['branch']
         ctgry=request.POST['category']
         if(brnch!='Any' and ctgry!='Any'):
             q=FinalStudent.objects.filter(academic_year=acyr,branch=brnch,category=ctgry).values(*field_list)
-
         elif(brnch!='Any' and ctgry=='Any'):
             q=FinalStudent.objects.filter(academic_year=acyr,branch=brnch).values(*field_list)
         elif(brnch=='Any' and ctgry!='Any'):
             q=FinalStudent.objects.filter(academic_year=acyr,category=ctgry).values(*field_list)
         else:
             q=FinalStudent.objects.filter(academic_year=acyr).values(*field_list)
-
+        print(acyr)
+        print(q)
         return render(request,'reports.html',{'q':q})
     return render(request,'generatereports.html',{'fslist':fslist})
 def RemoveStudent(request):
@@ -187,23 +190,123 @@ def UploadCsv(request):
        csv1=csv_rows[0].split(',')
        if '\r' in csv1[len(csv1)-1]:
             s=csv1[len(csv1)-1]
-            csv1[len(csv1)-1]=s[0:len(s)-1]        
+            csv1[len(csv1)-1]=s[0:len(s)-1]
+       print(csv1) 
+       print(len(csv1))       
        fslist=[f.name for f in FinalStudent._meta.get_fields()]
        finalfeilds=[x for x in fslist if x in csv1]
+       print(len(finalfeilds))
        for i in range(1,len(csv_rows)):
             temp=csv_rows[i].split(',')
             if len(temp)==1 and temp[0]=='':continue
             if '\r' in temp[len(temp)-1]:
                 s=temp[len(temp)-1]
                 temp[len(temp)-1]=s[0:len(s)-1] 
+                print(len(temp))
+                # print(temp)
             recdict={finalfeilds[j]:temp[j] for j in range(0,len(temp))}
             try:
                 f=FinalStudent(**recdict)
                 f.save()
-                print(f.id)
+                # print(f.id)
             except IntegrityError:
                 messages.success(request,"Clash in Registration Numbers"+" "+f.reg_no)
                 return redirect('index')
        messages.success(request,"Data Uploaded Successfully!!!")
        return redirect('studentlist') 
     return render(request,'upload_csv.html')
+def acdadmin(request):
+    return render(request,'basicform/acad_admin.html')
+def addbcds(request,cat):
+    cat=int(cat)
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    if request.method=="POST":
+        if cat==0:
+            branchname=request.POST['new branch name']
+            b=Branch(branch_name=branchname)
+            b.save()
+            messages.success(request,"Branch Added Successfully")
+            return redirect('adcls',0)
+        if cat==1:
+            branch=request.POST['branch name']
+            classname=request.POST['new class name']
+            branch_instance=get_object_or_404(Branch,pk=branch)
+            c=Clss(branch_name=branch_instance,class_name=classname)
+            c.save()
+            messages.success(request,"Class Added Successfully")
+            return redirect('adcls',1)
+        if cat==2:
+            branch=request.POST['branch name']
+            classname=request.POST['class name']
+            division=request.POST['new division name']
+            branch_instance=get_object_or_404(Branch,pk=branch)
+            class_instance=get_object_or_404(Clss,class_name=classname,branch_name=branch)
+            d=Division(branch_name=branch_instance,class_name=class_instance,div_name=division)
+            d.save()
+            messages.success(request,"Division Added Successfully")
+            return redirect('adcls',2)
+        if cat==3:
+            branch=request.POST['branch name']
+            classname=request.POST['class name']
+            subject=request.POST['new subject name']
+            branch_instance=get_object_or_404(Branch,pk=branch)
+            class_instance=get_object_or_404(Clss,class_name=classname,branch_name=branch)
+            s=Subject(branch_name=branch_instance,class_name=class_instance,sub_name=subject)
+            s.save()
+            messages.success(request,"Subject Added Successfully")
+            return redirect('adcls',3)
+    context={'cat':cat}
+    branches=Branch.objects.all()
+    context['branches']=branches
+    if cat>1:
+        classes=Clss.objects.select_related('branch_name').all().values('branch_name_id','class_name')
+        context['classes']=classes    
+    return render(request,'addclass.html',context)
+def addpost(request,opt):
+    opt=int(opt)
+    if request.method=="POST":
+        if opt==0:
+            postname=request.POST['post_name']
+            postype=request.POST['post_type']
+            p=FPost(post_name=postname,post_type=postype)
+            p.save()
+            messages.success(request,"Post Added Successfully")
+            return redirect('addpost',0)
+        else:
+            facdict=dict(request.POST.items())
+            facdict.pop('csrfmiddlewaretoken')
+            facdict.pop('empcode')
+            post_instance=get_object_or_404(FPost,pk=facdict['post_name'])
+            branch_instance=get_object_or_404(Branch,pk=facdict['branch_name'])
+            facdict.pop('branch_name')
+            facdict.pop('post_name')
+            f=Faculty(**facdict)
+            f.post_name=post_instance
+            f.branch_name=branch_instance
+            f.save()
+            messages.success(request,"Faculty Added Successfully")
+            return redirect('addpost',1)
+    context={'opt':opt}
+    if opt==1:
+        postlist=FPost.objects.all()
+        branches=Branch.objects.all()
+        context['postlist']=postlist
+        context['branches']=branches
+    return render(request,'define_posts_faclty.html',context)
+def assignSubject(request):
+    if request.method=="POST":
+        fac=get_object_or_404(Faculty,name=request.POST['tname'])
+        sub=get_object_or_404(Subject,sub_name=request.POST['sub_name'])
+        sub.faculty=fac
+        div=get_object_or_404(Division,div_name=request.POST['div_name'],class_name__class_name=request.POST['class name'])
+        sub.division=div
+        sub.save()
+        messages.success(request,request.POST['tname']+" was assigned "+request.POST['sub_name']+" in div "+request.POST['div_name']+" in class "+request.POST['class name']+" "+request.POST['branch name'])
+        return redirect('asgnsub')
+    branches=Branch.objects.all()
+    classes=Clss.objects.select_related('branch_name').all().values('branch_name_id','class_name')
+    teachers=Faculty.objects.filter(post_name__post_type="Teaching").values('branch_name_id','name')
+    divisions=Division.objects.select_related('class_name').all().values('class_name__class_name','div_name')
+    subjects=Subject.objects.select_related('class_name').all().values('class_name__class_name','sub_name')
+    context={'classes':classes,'branches':branches,'teachers':teachers,'divisions':divisions,'subjects':subjects}
+    return render(request,'assignsubs.html',context)

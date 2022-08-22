@@ -20,7 +20,17 @@ function showTab(n) {
   // ... and run a function that displays the correct step indicator:
   fixStepIndicator(n)
 }
-
+document.getElementById('qta').addEventListener('change',(event) =>getCap());
+function getCap(){
+  var select = document.getElementById('qta');
+var x = select.options[select.selectedIndex].value;
+  var y=document.getElementById('cprnd');
+  var z=document.getElementById('cprlabel');
+  if(x!='CAP')
+  y.style.display='none',z.style.display='none';
+  else y.style='block',z.style.display='block';
+  console.log(x)
+}
 function nextPrev(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
@@ -44,35 +54,36 @@ function nextPrev(n) {
 function validateForm() {
   // This function deals with validation of the form fields
   var x, y, i, valid = true;
-  x = document.getElementsByClassName("tab");
-  y = x[currentTab].getElementsByTagName("input");
-  // A loop that checks every input field in the current tab:
-  for (i = 0; i < y.length; i++) {
-    // If a field is empty...
-    if (y[i].value == "") {
-      // add an "invalid" class to the field:
-      if(!y[i].reportValidity()){
-      y[i].className += " invalid";
-      // and set the current valid status to false:
-      valid = false;
-      }
-    }
-    if(y[i].type=="number"){
-      if(y[i].value.toString().length>y[i].maxLength || y[i].value.toString().length<y[i].minLength){
-        y[i].className += " invalid";
-        alert(y[i].name+" invalid")
-      // and set the current valid status to false:
-      valid = false;
-      }
-    }
-    if(y[i].type=="email"){
-      if(!ValidateEmail(y[i].value)){
-        y[i].className += " invalid";
-      // and set the current valid status to false:
-      valid = false;
-      }
-    }
-  }
+  // x = document.getElementsByClassName("tab");
+  // y = x[currentTab].getElementsByTagName("input");
+  // // A loop that checks every input field in the current tab:
+  // for (i = 0; i < y.length; i++) {
+  //   // If a field is empty...
+  //   if (y[i].value == "") {
+  //     // add an "invalid" class to the field:
+  //     if(!y[i].reportValidity()){
+  //     y[i].className += " invalid";
+  //     // and set the current valid status to false:
+  //     valid = false;
+  //     }
+  //   }
+  //   if(y[i].type=="number"){
+  //     if(y[i].value.toString().length>y[i].maxLength || y[i].value.toString().length<y[i].minLength){
+  //       y[i].className += " invalid";
+  //       alert(y[i].name+" invalid")
+  //     // and set the current valid status to false:
+  //     valid = false;
+  //     }
+  //   }
+  //   if(y[i].type=="email"){
+  //     if(!ValidateEmail(y[i].value)){
+  //       y[i].className += " invalid";
+  //     // and set the current valid status to false:
+  //     valid = false;
+  //     }
+  //   }
+
+  // }
 
   // If the valid status is true, mark the step as finished and valid:
   if (valid) {

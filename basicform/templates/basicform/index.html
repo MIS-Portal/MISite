@@ -56,7 +56,7 @@ img{
 }
 .container2{
   background-color: white;
-    margin: -380px 10px;
+    margin: -560px 10px;
     padding: 0px 0px;
     /* text-align: center; */
     width: 50%;
@@ -173,7 +173,9 @@ button.log {
     <a href="{%url 'rmvstudent'%}"><button class="act">Remove Student &#9888;</button></a>
     <a href="{%url 'delstudentlist'%}"><button class="act">Deletion History</button></a>
     <a href="{%url 'ucsv'%}"><button class="act">Upload Existing Student Data</button></a>
-
+    <a href="{%url 'acdadmin'%}"><button class="act" \>To Academic Admin</button></a>
+    <a href="/basicform/addpost_faculty/0"><button class="act" \>Define Post</button></a>
+    <a href="/basicform/addpost_faculty/1"><button class="act" \>Add Faculty</button></a>
 
     <!-- </ul> -->
   {%endif%}
@@ -194,6 +196,9 @@ button.log {
   <li><strong>Remove Student : </strong>Remove a Registered Student</li>
   <li><strong>Deletion History: </strong>List of Deleted Students</li>
   <li><strong>Upload Existing Student Data: </strong>Upload Student data in csv Format to add in database</li>
+  <li><strong>Go To Academic Admin: </strong>Define Branch,Class,Subject,assign Subject to teacher</li>
+  <li><strong>Define Post: </strong>Add new Posts</li>
+  <li><strong>Add Faculty: </strong>Add new Faculty</li>
 
  </div>
 {%else%}

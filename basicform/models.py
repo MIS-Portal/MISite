@@ -14,7 +14,7 @@ class Student(models.Model):
     id = models.CharField(primary_key=True,max_length=28,default=pkgen,unique=True)
     gender_list=[('M','male'),('F','female'),('O','other')]
     cap_choice_list=[(0,0),(1,1),(2,2),(3,3)]
-    quota_list=[('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
+    quota_list=[('CAP','CAP'),('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
     state_list=[('MS','MS'),('OMS','OMS')]
     area_list=[('rural','rural'),('urban','urban')]
     board_list=[('MH','maharashtra'),('CBSE','CBSE'),('ICSE','ICSE'),('Other','Other')]
@@ -97,7 +97,7 @@ class Student(models.Model):
 class FinalStudent(models.Model):
     gender_list=[('M','male'),('F','female'),('O','other')]
     cap_choice_list=[(0,0),(1,1),(2,2),(3,3)]
-    quota_list=[('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
+    quota_list=[('CAP','CAP'),('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
     state_list=[('MS','MS'),('OMS','OMS')]
     area_list=[('rural','rural'),('urban','urban')]
     board_list=[('MH','maharashtra'),('CBSE','CBSE'),('ICSE','ICSE'),('Other','Other')]
@@ -183,7 +183,7 @@ class FinalStudent(models.Model):
 class DeletedStudent(models.Model):
     gender_list=[('M','male'),('F','female'),('O','other')]
     cap_choice_list=[(0,0),(1,1),(2,2),(3,3)]
-    quota_list=[('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
+    quota_list=[('CAP','CAP'),('institute','insti. lvl'),('pio','pio,J&K,J&kSSS'),('NEUT','NEUT'),('OCI','OCI'),('FN','FN'),('CIWC','CIWC'),('TFWS','TFWS'),('EWS','EWS'),('DEF','DEF')]
     state_list=[('MS','MS'),('OMS','OMS')]
     area_list=[('rural','rural'),('urban','urban')]
     board_list=[('MH','maharashtra'),('CBSE','CBSE'),('ICSE','ICSE'),('Other','Other')]
@@ -211,7 +211,6 @@ class DeletedStudent(models.Model):
     place_of_birth=models.CharField(max_length=30,default='o')
     mobile_number=models.BigIntegerField(default=1)    
 
-    caste=models.CharField(max_length=20,default='o')
     Student_mobile=models.BigIntegerField(default=1)
     Tele_phone=models.BigIntegerField(default=1)
     Blood_group=models.CharField(max_length=3,default='o')
@@ -264,3 +263,42 @@ class DeletedStudent(models.Model):
 
     def __str__(self):
         return self.first_name+" "+self.last_name
+
+
+class Branch(models.Model):
+    branch_name=models.CharField(primary_key=True,max_length=50)
+    def __str__(self):
+        return self.branch_name
+class Clss(models.Model):
+    branch_name=models.ForeignKey('Branch',on_delete=models.CASCADE)
+    class_name=models.CharField(max_length=20)
+    def __str__(self):
+        return self.class_name
+class Division(models.Model):
+    branch_name=models.ForeignKey('Branch',on_delete=models.CASCADE)
+    class_name=models.ForeignKey('Clss',on_delete=models.CASCADE)
+    div_name=models.CharField(max_length=20)
+    def __str__(self):
+        return self.div_name
+class Subject(models.Model):
+    branch_name=models.ForeignKey('Branch',on_delete=models.CASCADE)
+    class_name=models.ForeignKey('Clss',on_delete=models.CASCADE)
+    sub_name=models.CharField(max_length=50)
+    faculty=models.ForeignKey('Faculty',null=True,on_delete=models.SET_NULL)
+    division=models.ForeignKey('Division',null=True,on_delete=models.SET_NULL)
+    def __str__(self):
+        return self.sub_name
+class FPost(models.Model):
+    choicelist=[('Teaching','Teaching'),('Non Teaching','Non Teaching')]
+    post_name=models.CharField(primary_key=True,max_length=50)
+    post_type=models.CharField(choices=choicelist,max_length=50)
+    def __str__(self):
+        return self.post_name
+class Faculty(models.Model):
+    emp_code=models.IntegerField(primary_key=True)
+    name=models.CharField(max_length=50)
+    branch_name=models.ForeignKey('Branch',null=True,on_delete=models.SET_NULL)
+    date_of_joining=models.DateField(auto_now=False, auto_now_add=False)
+    post_name=models.ForeignKey("FPost", null=True,on_delete=models.SET_NULL)
+    def __str__(self):
+        return self.name
