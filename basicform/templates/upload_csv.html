@@ -13,6 +13,7 @@
     </div>
     <form action="" method="POST" enctype="multipart/form-data">
         {%csrf_token%}
+        <p>Note: Replace every ',' with space in the csv file</p>
         <input type="file" accept=".xls,.xlsx,.csv" name="ucsv" value="ucsv">Upload Csv
         <button type="submit">submit</button>
     </form>

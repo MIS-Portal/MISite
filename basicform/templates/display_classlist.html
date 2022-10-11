@@ -1,0 +1,216 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<style>
+    .choiced{
+     padding: 10px;
+  width: 95.4%;
+  margin: 1%;
+  font-size: 17px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+  float: left;
+}
+.chall{
+  width:100%;
+}
+.scndry{
+  width: 100%;
+}
+form{
+  display: flex;
+}
+</style>
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+
+<div class="home">
+    <div class="heading">
+      <h3>Display Class-wise Student List</h3>
+      <img src="{% static 'PICT-Logo.png' %}">
+    </div>
+    {% if messages %}
+{%for message in messages%}
+{{message}}
+{%endfor%}
+{% endif %}
+  <hr>
+
+    <div class="chi">
+        <span class="choice">
+          <label for="branch">Branch*</label>
+          <select name="branch name" id="branch" onchange="dropdownsel()" >
+            <option value=""> </option>
+            {%for i in branches%}
+            <option value='{{i}}'>{{i}}</option>
+            {%endfor%}
+          </select>
+          </span>
+          <span class="choice">
+            <label for="class">Class*</label>
+            <select name="class name" id="class" onchange="dropdownsel2()" >
+              <option value=""> </option>
+            </select>
+            </span>
+                    <span class="choice">
+                        <label for="divn">Division*</label>
+                        <select name="div_name" id="divn"  >
+                          <option value=""> </option>
+                        </select>
+                        </span>
+                        <input type="button" value="get list" onpointerdown="getstudents()">
+                      </div>
+          <div class="tab" id="student">
+            <table id="studtab" >
+      <tr>
+        <th>Student name</th><th>Surname</th><th>Registration Number</th><th>Academic Year</th></tr>
+        </table>
+      </div>
+      
+      <a href="{%url 'acdadmin' %}">Go to Home</a>
+  </div>
+  <script>
+
+    function checker(){
+      var d=document.getElementById('divn')
+      var x=document.getElementById('class')
+      if(x.value==""){
+        confirm("Class Field is Empty, Please choose a valid Branch or create new class")
+      }
+      if(d.value==''){
+        confirm("Empty Division values not allowed")
+      }
+    }
+
+    function dropdownsel(){
+      var x=document.getElementById('branch')
+      var t=document.getElementById('class')
+      var p=document.getElementById('student')
+      var di=document.getElementById('divn')
+      document.querySelectorAll('#class option').forEach(option => option.remove())
+      var st=document.getElementsByTagName("tr");
+        var i=1;
+        var td=st.length-1
+        while(td--){
+          // console.log(st[i])
+          if(i<st.length)st[i].remove();
+        }
+      var cnt=0
+      {%for i in classes%}
+      {%for key,value in i.items%}
+      {% autoescape off %}
+      if('{{ key }}'=='branch_name_id' && '{{value}}'==x.value){
+        cnt=1
+      }
+      else if('{{key}}'=='branch_name_id')cnt=0
+      else{
+        if(cnt==1){
+          var y=document.getElementById('class')
+          var opt=document.createElement('option')
+          opt.value='{{value}}'
+          opt.text='{{value}}'
+          y.add(opt)
+          cnt=0;
+        }
+      }
+      // console.log('{{key}}','{{value}}',cnt)
+      {% endautoescape %}
+      {%endfor%}
+      {%endfor%}
+      dropdownsel2()
+    }
+    function getstudents(){
+        checker()
+        console.log("HOI")
+        var x=document.getElementById('branch')
+      var t=document.getElementById('class')
+      var p=document.getElementById('student')
+      var di=document.getElementById('divn')
+      var row;
+      var cnt2=0
+      {%for i in students%}
+      {%for key,value in i.items%}
+      {% autoescape off %}
+      if('{{ key }}'=='branch' && '{{value}}'==x.value){
+        cnt2=2
+      }
+      else if('{{key}}'=='class_name__class_name'&&'{{value}}'==t.value){
+        cnt2++;
+      }
+      else if('{{key}}'=='division__div_name'&&'{{value}}'==di.value){
+        cnt2++;
+      }
+      else if('{{key}}'=='branch_name_id'||'{{key}}'=='class_name__class_name'||'{{key}}'=='division__div_name')cnt2=0
+      else{
+        if(cnt2){
+        var table = document.getElementById("studtab");
+        var tarows= document.getElementsByTagName('tr')
+        var l=tarows.length
+        if(cnt2==4){
+          console.log('hii','{{value}}')
+          row = table.insertRow();
+      }
+        var cell = row.insertCell();
+        cell.innerHTML = '{{value}}';  
+        cnt2--;
+        console.log('{{key}}','{{value}}',cnt2)
+        }
+      }
+      // console.log('{{key}}','{{value}}',cnt2)
+      {% endautoescape %}
+      {%endfor%}
+      {%endfor%}
+    }
+
+    function dropdownsel2(){
+      var x=document.getElementById('class')
+      var l=document.getElementById('branch')
+      var p=document.getElementById('divn')
+      document.querySelectorAll('#divn option').forEach(option => option.remove())
+      // console.log(x.value)  
+      var cnt2=0
+      {%for i in divisions%}
+      {%for key,value in i.items%}
+      {% autoescape off %}
+      if('{{ key }}'=='class_name__class_name' && '{{value}}'==x.value){
+        cnt2=1
+      }
+      else if('{{key}}'=='branch_name__branch_name'&&'{{value}}'==l.value)cnt2++;
+      else if('{{key}}'=='class_name__class_name'||'{{key}}'=='branch_name__branch_name')cnt2=0
+      else{
+        if(cnt2==2){
+          var y=document.getElementById('divn')
+          var opt=document.createElement('option')
+          opt.value='{{value}}'
+          opt.text='{{value}}'
+          y.add(opt)
+          cnt2=0;
+        }
+      }
+      // console.log('{{key}}','{{value}}',cnt)
+      {% endautoescape %}
+      {%endfor%}
+      {%endfor%}
+    }
+    function selectall(){
+  var s=document.getElementsByClassName('chall')
+  var t=document.getElementsByClassName('scndry')
+
+  if(s[0].checked==true){
+    for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=true;
+    }
+  }
+}
+else{
+  for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=false;
+    }
+  }
+}
+}
+  </script>

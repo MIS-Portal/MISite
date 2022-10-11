@@ -10,7 +10,12 @@
   .heading{
     display:inline-block;
   }
-
+  .chall{
+    width:100%;
+  }
+  .scndry{
+    width: 100%;
+  }
   .tab{
     overflow-y: scroll;
     width: fit-content;

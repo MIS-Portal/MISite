@@ -77,7 +77,7 @@ class Student(models.Model):
     academic_year=models.CharField(max_length=20,default='2021-22')
     cap_round=models.IntegerField(choices=cap_choice_list,default=1)
     quota=models.CharField(max_length=20,choices=quota_list,default='institute')
-    branch=models.CharField(max_length=20,choices=branch_list,default='Computer')
+    branch=models.CharField(max_length=20,default='Computer')
     aadhar_no=models.IntegerField(default=55555)
 
     father_mobile=models.IntegerField( default=1)
@@ -161,7 +161,7 @@ class FinalStudent(models.Model):
     academic_year=models.CharField(max_length=20,default='2021-22')
     cap_round=models.IntegerField(choices=cap_choice_list,default=0)
     quota=models.CharField(max_length=20,choices=quota_list,default='institute')
-    branch=models.CharField(max_length=20,choices=branch_list,default='Computer')
+    branch=models.CharField(max_length=20,default='Computer')
     aadhar_no=models.IntegerField(default=55555)
 
     father_mobile=models.IntegerField( default=1)
@@ -175,8 +175,8 @@ class FinalStudent(models.Model):
     first_attempt=models.CharField(max_length=3,choices=yesno_list,default='yes')
     other_info= models.CharField(blank=True,max_length=100)
     marksheet_name=models.CharField(blank=True,max_length=100)
-
-
+    class_name=models.ForeignKey('Clss',null=True,on_delete=models.SET_NULL,default=None)
+    division=models.ForeignKey('Division',null=True,on_delete=models.SET_NULL,default=None)
     def __str__(self):
         return self.first_name+" "+self.last_name
 
@@ -245,7 +245,7 @@ class DeletedStudent(models.Model):
     academic_year=models.CharField(max_length=20,default='2021-22')
     cap_round=models.IntegerField(choices=cap_choice_list,default=0)
     quota=models.CharField(max_length=20,choices=quota_list,default='institute')
-    branch=models.CharField(max_length=20,choices=branch_list,default='Computer')
+    branch=models.CharField(max_length=20,default='Computer')
     aadhar_no=models.IntegerField(default=55555)
 
     father_mobile=models.IntegerField( default=1)
@@ -259,7 +259,8 @@ class DeletedStudent(models.Model):
     first_attempt=models.CharField(max_length=3,choices=yesno_list,default='yes')
     other_info= models.CharField(blank=True,max_length=100)
     marksheet_name=models.CharField(blank=True,max_length=100)
-    
+    class_name=models.ForeignKey('Clss',null=True,on_delete=models.SET_NULL,default=None)
+    division=models.ForeignKey('Division',null=True,on_delete=models.SET_NULL,default=None)
 
     def __str__(self):
         return self.first_name+" "+self.last_name

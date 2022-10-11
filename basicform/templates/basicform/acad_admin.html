@@ -1,0 +1,186 @@
+{%load customtags%}
+{%load static%}
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<!-- <link rel='stylesheet' href="{% static 'Base.css' %}"> -->
+<style>
+  .home {
+  background-color: #FFFDD0;
+  margin: 100px auto;
+  padding: 150px 0;
+  /* text-align: center; */
+  width: 90%;
+  font-family: 'Arvo', serif;
+  align-items: center;
+  font-size: 24px;
+}
+h3{
+  color: blue;
+    /* margin-left: auto; */
+    margin: -55px 100px 0px;
+    font-size: 40px;
+    float: left;
+}
+ 
+img{
+    /* display: block; */
+    width: 60;
+    /* height: fit-content; */
+    margin: -60px 30px;
+    position: absolute;
+    /* top: 497px; */
+    /* bottom: 0px; */
+    float: left;
+}
+.TitleBlock{
+  display: inline-block;
+}
+.container1{
+  background-color: white;
+    margin: -250px 10px;
+    padding: 0px 0px;
+    /* text-align: center; */
+    width: 50%;
+    height: auto;
+    font-family:'Arvo', serif;
+    /* align-items: center; */
+    font-size: 20px;
+    float: right;
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+    padding:10px;
+}
+.container2{
+  background-color: white;
+    margin: -380px 10px;
+    padding: 0px 0px;
+    /* text-align: center; */
+    width: 50%;
+    height: auto;
+    font-family:'Arvo', serif;
+    /* align-items: center; */
+    font-size: 20px;
+    float: right;
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+    padding:10px;
+    text-align: left;
+}
+.container3{
+  background-color: white;
+    margin: 10px 10px;
+    padding: 0px 0px;
+    /* text-align: center; */
+    width: 94%;
+    height: auto;
+    font-family:'Arvo', serif;
+    /* align-items: center; */
+    font-size: 20px;
+    float: right;
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+    padding:10px;
+    text-align: left;
+}
+li{
+  text-align: left;
+}
+button.act{
+  outline: 0;
+    width: 100%;
+    padding: 10px;
+    height: 75%;
+    margin: 5px;
+    background: #7272dc;
+    border: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+.links{
+  display: flex;
+    flex-direction: column;
+    margin: 80px 0px 0px;
+    padding: 12px 12px;
+}
+a{
+  width: 40%;
+    height: auto;
+}
+button.log {
+    outline: 0;
+    background: #7272dc;
+    width: 15%;
+    border: 0;
+    padding: 15px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3 ease;
+    cursor: pointer;
+    float: right;
+    margin: -55px 10px 0px;
+  }
+</style>
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+
+<div class="home">
+<img src="{% static 'PICT-Logo.png' %}">
+<h3>Welcome to Academic Admin</h3>
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}"><button class="log">Logout</button></a>
+{% else %}
+<a href="{% url 'login' %}"><button class="log">Login</button></a>
+{% endif %}
+<hr>
+{% if messages %}
+{%for message in messages%}
+{{message}}
+{%endfor%}
+{% endif %}
+{%if user.is_authenticated and user|has_group:"Administrator"%}
+<div class="links">
+  <a href="/basicform/addbcds/0"><button class="act">Define Branch</button></a>
+  <a href="/basicform/addbcds/1"><button class="act">Define Class</button></a>
+    <a href="/basicform/addbcds/2"><button class="act">Define Division</button></a>
+    <a href="/basicform/addbcds/3"><button class="act">Define Subjects</button></a>
+    <a href="{%url 'asgnsub'%}"><button class="act">Allocate Subjects to Teachers</button></a>
+    <a href="{%url 'asgnclass'%}"><button class="act">Allocate classes to Students</button></a>
+    <a href="{%url 'index'%}"><button class="act">Go back To Mis Admin</button></a>
+    <a href="{%url 'dispclass'%}"><button class="act">Show Class-wise Student List</button></a>
+
+</div>
+<div class="container1">
+  <strong>Admin Portal</strong>
+  <hr>
+  <ul>
+  <li><strong>Define Branch: </strong> Add a new Branch to Branch list</li>
+  <li><strong>Define Class: </strong>Add new class in Branch</li>
+  <li><strong>Define Division: </strong>Add new division in class of chosen Branch</li>
+  <li><strong>Define Subjects: </strong>Define Subjects for class of chosen Branch</li>
+  <li><strong>Allocate Subjects to Teachers: </strong>Assign chosen subject to chosen teacher</li>
+ </div>
+{%else%}
+<div class="container3">
+  <strong>User Not Logged in</strong>
+  <hr>
+  <ul>
+ <li><strong>Please Log in to continue</strong></li>
+</div>
+{%endif%} 

@@ -1,0 +1,180 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<style>
+    .home {
+    background-color: #FFFDD0;
+    margin: 50px auto;
+    padding: 180px 0;
+    text-align: center;
+    width: 90%;
+    font-family: 'Arvo', serif;
+    align-items: center;
+  }
+  .choiced{
+     padding: 10px;
+  width: 95.4%;
+  margin: 1%;
+  font-size: 17px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+  float: left;
+}
+input[type="radio" i] {
+  width: auto;
+}
+  </style>
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+
+<div class="home">
+  <div class="heading">
+    {%if opt is 0%}
+    <h3>Define Post</h3>
+    {%else%}
+    <h3>Add Faculty</h3>
+    {%endif%}
+    <img src="{% static 'PICT-Logo.png' %}">
+  </div>
+  {% if messages %}
+  {%for message in messages%}
+  {{message}}
+  {%endfor%}
+  {% endif %}
+<hr>
+<form action=""method="POST">
+    {% csrf_token %}
+    {%if opt is 0%}
+    <span class="choice">
+      <label for="pos">Post Type*</label>
+      <select name="post_type" id="pos"  >
+        <option vlaue="Teaching">Teaching</option>
+        <option value="Non Teaching">Non Teaching</option>
+      </select>
+    </span>
+    <input type="text" name="post_name" placeholder="Post Name">
+    {%else%}
+    <span class="choiced">
+     <input type="text" name="name" placeholder="Faculty Name">
+     <span class="choiced"> 
+      <label for="brnc">Branch*</label>
+     <select name="branch_name" id="brnc" >
+        <option value="None">None</option>
+        {%for i in branches%}
+        <option value='{{i}}'>{{i}}</option>
+        {%endfor%}
+      </select>
+    </span>
+    <span class="choiced"><label for="date_of_joining" >Date of Joining*</label><input type="date" required placeholder="Date ofJoining*" name="date_of_joining"></span>   
+    <span class="choiced">
+      <label for="desg">Designation*</label>
+      <select name="post_name" id="desg" >
+        {%for i in postlist%}
+        <option value='{{i}}'>{{i}}</option>
+        {%endfor%}
+      </select>
+    </span>
+    <span class="choiced">
+    <input type="radio" id="autog" name="empcode" value="autog" onclick="radcheck()">
+    <label for="autog">Auto Generate Emp Code</label>
+    <input type="radio" id="man" name="empcode" value="manual" checked onclick="radcheck()">
+    <label for="man">Manually Enter Emp Code</label> 
+    <input type="text" name="emp_code" placeholder="Employee Code" id="emcode">
+    </span>
+  </span>
+    {%endif%}
+    <input type="submit" id="submit"></form>
+    {%if opt is 0%} 
+    <div class="tab">
+      <table>
+        <tr><th>Post name</th><th>Post type</th></tr>
+        {%for i in postlist%}
+        <tr>
+        {%for key,value in i.items%}
+        <td>{{value}}</td>
+        {%endfor%} 
+      </tr>
+      {%endfor%} 
+      </table>
+      </div>
+    {%else%}
+    <div class="tab">
+      <table>
+        <tr><th><input type="checkbox" class="chall" onclick="selectall()"></th><th>Emp code</th><th>Faculty Name</th><th>Branch</th><th>Post</th></tr>
+        {%for i in faculty%}
+        <tr>
+          <td><input type="checkbox" class='scndry'></td>
+        {%for key,value in i.items%}
+        <td>{{value}}</td>
+        {%endfor%} 
+      </tr>
+      {%endfor%} 
+      </table>
+      </div>
+      <form action="{%url 'delent'%}" method="POST" id="deletefaculty">
+        {% csrf_token %}
+        <input type="text" id="delfaculty" name="delfaculty" hidden>
+        <input type="button" value="Delete Faculty" onpointerdown="deleteentity('faculty',1)">
+      </form>
+      {%endif%}
+    <a href="{%url 'index' %}">Go to Home</a>
+</div>
+<script>
+  function radcheck(){
+    var x=document.getElementById("autog")
+    var y=document.getElementById("man")
+    var z=document.getElementById("emcode")
+    if(x.checked==true){
+      z.value="Some Random Key"
+    }
+    if(y.checked==true){
+      z.value=""
+    }
+  }
+
+  function selectall(){
+  var s=document.getElementsByClassName('chall')
+  var t=document.getElementsByClassName('scndry')
+
+  if(s[0].checked==true){
+    for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=true;
+    }
+  }
+}
+else{
+  for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=false;
+    }
+  }
+}
+}
+
+
+function deleteentity(param,index){
+
+      var rows = document.getElementsByTagName('tr');
+      var listo=[]
+      for(var i=1;i<rows.length;i++){
+        var s=rows[i].querySelectorAll('input[type="checkbox"]:checked');
+        if(s.length!=0){
+        var cols = rows[i].querySelectorAll('td,th');
+        if(index==1)
+        listo.push(cols[index].innerText);
+      }
+    }
+      console.log(listo)
+      var myForm = document.getElementById("delete"+param);
+      var myInput = document.getElementById("del"+param);
+      myInput.setAttribute("value",listo.toString());
+      console.log(myInput.value)
+      // console.log(myForm.type)
+      myForm.appendChild(myInput);
+      document.getElementById("delete"+param).submit();
+    }
+  
+</script>

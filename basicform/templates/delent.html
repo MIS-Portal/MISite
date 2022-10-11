@@ -1,0 +1,100 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+
+<div class="home">
+  <div class="heading">
+    <h3>Delete Entity</h3>
+    <img src="{% static 'PICT-Logo.png' %}">
+  </div>
+<hr>
+<div id="data">
+    <h1>Do You really want to Delete the following: </h1>
+    <h2>Branches:</h2>
+    <ol>{%for i in debranch%}
+        <li>{{i}}</li>
+        {%endfor%}
+    </ol>
+    <h2>Classes:</h2>
+    <ol>{%for i in declass%}
+        <li>{{i}}</li>
+        {%endfor%}
+    </ol>
+    <h2>Divisions:</h2>
+    <ol>{%for i in dediv%}
+        <li>{{i}}</li>
+        {%endfor%}
+    </ol>
+    <h2>Subjects:</h2>
+    <ol>{%for i in desub%}
+        <li>{{i}}</li>
+        {%endfor%}
+    </ol>
+    <h2>Faculty:</h2>
+    <ol>{%for i in faclist%}
+        <li>{{i}}</li>
+        {%endfor%}
+    </ol>
+</div>
+<form action="" method="POST" id="delform">
+    {%csrf_token%}
+    <input type="text" hidden id="entity">
+    <input type="text" hidden name="confirm" value="NO" id="confirm" >
+    <input type="submit" value="Yes" onclick="event.preventDefault();toggle()">
+    <input type="submit" value="No" onclick="toggle2()">
+</form>
+</div>
+<script>
+    function toggle(){
+       
+        var newb=document.getElementById('entity')
+        var enti='{{entity}}'
+        if(confirm("Are you sure?")){
+           
+            if(enti=='0'){
+                newb.name='branches';
+                {%autoescape off%}
+                newb.value="{{debranch}}";
+                {%endautoescape%}
+            }
+            if(enti=='1'){
+                newb.name='classes';
+                {%autoescape off%}
+                newb.value="{{clslist}}";
+                {%endautoescape%}
+            }
+            if(enti=='2'){
+                newb.name='divisions';
+                {%autoescape off%}
+                newb.value="{{divlist}}";
+                {%endautoescape%}
+            }
+            if(enti=='3'){
+                newb.name='subjects';
+                {%autoescape off%}
+                newb.value="{{sublist}}";
+                {%endautoescape%}
+            }
+            if(enti=='4'){
+                newb.name='faculties';
+                {%autoescape off%}
+                newb.value="{{faclist}}";
+                {%endautoescape%}
+            }
+        var t=document.getElementById('confirm')
+        t.setAttribute('value','YES');
+        var f=document.getElementById('delform')
+        f.appendChild(newb)
+        f.submit();
+    }
+    
+    }
+    function toggle2(){
+        var t=document.getElementById('confirm')
+        t.setAttribute('value','NO');
+    }
+</script>
