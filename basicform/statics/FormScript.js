@@ -20,7 +20,17 @@ function showTab(n) {
   // ... and run a function that displays the correct step indicator:
   fixStepIndicator(n)
 }
-
+document.getElementById('qta').addEventListener('change',(event) =>getCap());
+function getCap(){
+  var select = document.getElementById('qta');
+var x = select.options[select.selectedIndex].value;
+  var y=document.getElementById('cprnd');
+  var z=document.getElementById('cprlabel');
+  if(x!='CAP')
+  y.style.display='none',z.style.display='none';
+  else y.style='block',z.style.display='block';
+  console.log(x)
+}
 function nextPrev(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
@@ -72,6 +82,7 @@ function validateForm() {
       valid = false;
       }
     }
+
   }
 
   // If the valid status is true, mark the step as finished and valid:

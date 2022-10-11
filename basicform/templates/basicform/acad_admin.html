@@ -39,7 +39,7 @@ img{
 }
 .container1{
   background-color: white;
-    margin: -130px 10px;
+    margin: -250px 10px;
     padding: 0px 0px;
     /* text-align: center; */
     width: 50%;
@@ -56,7 +56,7 @@ img{
 }
 .container2{
   background-color: white;
-    margin: -560px 10px;
+    margin: -380px 10px;
     padding: 0px 0px;
     /* text-align: center; */
     width: 50%;
@@ -142,74 +142,40 @@ button.log {
 
 <div class="home">
 <img src="{% static 'PICT-Logo.png' %}">
-<h3>Welcome to MIS Portal</h3>
+<h3>Welcome to Academic Admin</h3>
 {% if user.is_authenticated %}
 <a href="{% url 'logout' %}"><button class="log">Logout</button></a>
 {% else %}
 <a href="{% url 'login' %}"><button class="log">Login</button></a>
 {% endif %}
-<!-- </div> -->
 <hr>
 {% if messages %}
 {%for message in messages%}
 {{message}}
 {%endfor%}
 {% endif %}
-{%if user.is_authenticated %}
+{%if user.is_authenticated and user|has_group:"Administrator"%}
 <div class="links">
-  <!-- <ul> -->
-  <a href="/basicform/student"><button class="act">Fill Form</button></a>
-  <!-- </ul> -->
-  {%if user|has_group:"Administrator"%}
-  <!-- <ul> -->
-  <a href="/basicform/misadmin"><button class="act">Check Student</button></a>
-  <!-- </ul> -->
-  <!-- <ul> -->
-    <a href="{%url 'studentlist'%}"><button class="act">Student List</button></a>
-  <!-- </ul> -->
-  <!-- <ul> -->
-    <a href="{%url 'showpending'%}"><button class="act">Show Pending</button></a>
-    <a href="{%url 'studentrecords'%}"><button class="act">Student Records</button></a>
-    <a href="{%url 'rmvstudent'%}"><button class="act">Remove Student &#9888;</button></a>
-    <a href="{%url 'delstudentlist'%}"><button class="act">Deletion History</button></a>
-    <a href="{%url 'ucsv'%}"><button class="act">Upload Existing Student Data</button></a>
-    <a href="{%url 'acdadmin'%}"><button class="act" \>To Academic Admin</button></a>
-    <a href="/basicform/addpost_faculty/0"><button class="act" \>Define Post</button></a>
-    <a href="/basicform/addpost_faculty/1"><button class="act" \>Add Faculty</button></a>
+  <a href="/basicform/addbcds/0"><button class="act">Define Branch</button></a>
+  <a href="/basicform/addbcds/1"><button class="act">Define Class</button></a>
+    <a href="/basicform/addbcds/2"><button class="act">Define Division</button></a>
+    <a href="/basicform/addbcds/3"><button class="act">Define Subjects</button></a>
+    <a href="{%url 'asgnsub'%}"><button class="act">Allocate Subjects to Teachers</button></a>
+    <a href="{%url 'asgnclass'%}"><button class="act">Allocate classes to Students</button></a>
+    <a href="{%url 'index'%}"><button class="act">Go back To Mis Admin</button></a>
+    <a href="{%url 'dispclass'%}"><button class="act">Show Class-wise Student List</button></a>
 
-    <!-- </ul> -->
-  {%endif%}
-  <!-- <ul> -->
-  <a href="{%url 'viewform'%}"><button class="act">View Form</button></a>
-  <!-- </ul> -->
 </div>
-{%if user|has_group:"Administrator"%}
-<div class="container2">
+<div class="container1">
   <strong>Admin Portal</strong>
   <hr>
   <ul>
-  <li><strong>Fill Form: </strong> Fill and Submit Student Information</li>
-  <li><strong>Check Student: </strong>Search for Student with Uid,verify and add or remove</li>
-  <li><strong>Student List: </strong>List of All registered Students</li>
-  <li><strong>Show Pending: </strong>Show Pending Student Verifications</li>
-  <li><strong>Student Records: </strong>Get filter-wise Records in csv</li>
-  <li><strong>Remove Student : </strong>Remove a Registered Student</li>
-  <li><strong>Deletion History: </strong>List of Deleted Students</li>
-  <li><strong>Upload Existing Student Data: </strong>Upload Student data in csv Format to add in database</li>
-  <li><strong>Go To Academic Admin: </strong>Define Branch,Class,Subject,assign Subject to teacher</li>
-  <li><strong>Define Post: </strong>Add new Posts</li>
-  <li><strong>Add Faculty: </strong>Add new Faculty</li>
-
+  <li><strong>Define Branch: </strong> Add a new Branch to Branch list</li>
+  <li><strong>Define Class: </strong>Add new class in Branch</li>
+  <li><strong>Define Division: </strong>Add new division in class of chosen Branch</li>
+  <li><strong>Define Subjects: </strong>Define Subjects for class of chosen Branch</li>
+  <li><strong>Allocate Subjects to Teachers: </strong>Assign chosen subject to chosen teacher</li>
  </div>
-{%else%}
-<div class="container1">
-  <strong>Data Entry Portal</strong>
-  <hr>
-  <ul>
- <li><strong>Fill Form:</strong> Fill and Submit Student Information</li>
- <li><strong>View Form:</strong> View Latest Filled Form</li></ul>
-</div>
-{%endif%}
 {%else%}
 <div class="container3">
   <strong>User Not Logged in</strong>

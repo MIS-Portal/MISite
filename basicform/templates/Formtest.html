@@ -42,34 +42,36 @@
         <span class="choice">
         <label for="brnch">Branch*</label>
         <select name="branch" id="brnch"  >
-          <option value="Computer">Computer Science</option>
-          <option vlaue="IT">IT</option>
-          <option vlaue="ENTC">ENTC</option>
-          <option vlaue="Data Science">Data Science</option></select>
+          {%for value in branches%}
+          {%autoescape off%}
+          <option value='{{value}}'>{{value}}</option>
+          {%endautoescape%}
+          {%endfor%}
+          </select>
         </span>
         <span class="choice">
-          <label for="cprnd">Cap Round*</label>
+          <label for="qta">Quota*</label>
+          <select name="quota" id="qta">
+            <option value="CAP">CAP</option>
+            <option value="Insti.lvl">Insti.lvl</option>
+            <option vlaue="NEUT">NEUT</option>
+            <option vlaue="OCI">OCI</option>
+            <option vlaue="FN">FN</option>
+            <option vlaue="CIWC">CIWC</option>
+            <option vlaue="TFWS">TFWS</option>
+            <option vlaue="EWS">EWS</option>
+            <option vlaue="DEF">DEF</option>
+          </select>
+          </span>
+        <span class="choice">
+          <label for="cprnd" id="cprlabel">Cap Round*</label>
           <select name="cap_round" id="cprnd"  >
             <option value=1>0</option>
             <option value=1>1</option>
             <option value=2>2</option>
             <option vlaue=3>3</option></select>
           </span>
-        <span class="choice" data-show-if="cap_round:0">
-        <label for="qta">Quota*</label>
-        <select name="quota" id="qta"  >
-          <div  data-hide-if="cap_round:0">
-          <option value="Insti.lvl">Insti.lvl</option>
-          <option vlaue="NEUT">NEUT</option>
-          <option vlaue="OCI">OCI</option>
-          <option vlaue="FN">FN</option>
-          <option vlaue="CIWC">CIWC</option>
-        </div>
-          <option vlaue="TFWS">TFWS</option>
-          <option vlaue="EWS">EWS</option>
-          <option vlaue="DEF">DEF</option>
-        </select>
-        </span>
+       
       </div>
         <hr>
         <div class="bloock">

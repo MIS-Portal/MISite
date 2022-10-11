@@ -64,8 +64,7 @@ var headcol=rows[0].querySelectorAll('td,th')
     headrow.push(headcol[i].innerHTML)
   }
   csv_data.push(headrow.join(","))
-  
-for (var i = 0; i < rows.length; i++) {
+for (var i = 1; i < rows.length; i++) {
   // Get each column data
 
   var s=rows[i].querySelectorAll('input[type="checkbox"]:checked');
