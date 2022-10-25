@@ -1,0 +1,400 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<style>
+    .choiced{
+     padding: 10px;
+  width: 95.4%;
+  margin: 1%;
+  font-size: 17px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+  float: left;
+}
+/* .chall{
+  width:100%;
+} */
+.scndry{
+  width: 100%;
+}
+form{
+  display: block;
+}
+@import url(https://fonts.googleapis.com/css?family=Numans);
+body {
+  font-family: 'Numans', sans-serif;
+}
+.holder {
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+}
+.checkdiv {
+  position: relative;
+  padding: 4px 8px;
+  border-radius:40px;
+  margin-bottom:4px;
+  min-height:30px;
+  padding-left:40px;
+  display: flex;
+  align-items: center;
+}
+.checkdiv:last-child {
+  margin-bottom:0px;
+}
+.checkdiv span {
+  position: relative;
+  vertical-align: middle;
+  line-height: normal;
+}
+.le-checkbox {
+  appearance: none;
+  position: absolute;
+  top:50%;
+  left:5px;
+  transform:translateY(-50%);
+  background-color: #F44336;
+  width:30px;
+  height:30px;
+  border-radius:40px;
+  margin:0px;
+  outline: none; 
+  transition:background-color .1s;
+}
+.le-checkbox:before {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  background-color:#ffffff;
+  width:20px;
+  height:5px;
+  border-radius:40px;
+  transition:all .5s;
+}
+
+.le-checkbox:after {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(-45deg);
+  background-color:#ffffff;
+  width:20px;
+  height:5px;
+  border-radius:40px;
+  transition:all .5s;
+}
+.le-checkbox:checked {
+  background-color:#4CAF50;
+}
+.le-checkbox:checked:before {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) translate(-4px,3px) rotate(45deg);
+  background-color:#ffffff;
+  width:12px;
+  height:5px;
+  border-radius:40px;
+}
+
+.le-checkbox:checked:after {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) translate(3px,2px) rotate(-45deg);
+  background-color:#ffffff;
+  width:16px;
+  height:5px;
+  border-radius:40px;
+}
+.chall {
+  appearance: none;
+  position: absolute;
+  top:50%;
+  left:5px;
+  transform:translateY(-50%);
+  background-color: #F44336;
+  width:30px;
+  height:30px;
+  border-radius:40px;
+  margin:0px;
+  outline: none; 
+  transition:background-color .1s;
+}
+.chall:before {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  background-color:#ffffff;
+  width:20px;
+  height:5px;
+  border-radius:40px;
+  transition:all .1s;
+}
+
+.chall:after {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(-45deg);
+  background-color:#ffffff;
+  width:20px;
+  height:5px;
+  border-radius:40px;
+  transition:all .1s;
+}
+.chall:checked {
+  background-color:#4CAF50;
+}
+.chall:checked:before {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) translate(-4px,3px) rotate(45deg);
+  background-color:#ffffff;
+  width:12px;
+  height:5px;
+  border-radius:40px;
+}
+
+.chall:checked:after {
+  content:'';
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) translate(3px,2px) rotate(-45deg);
+  background-color:#ffffff;
+  width:16px;
+  height:5px;
+  border-radius:40px;
+}
+input{
+  padding:0px 0px;
+  width:auto;
+  height:auto;
+}
+.chall{
+  .le-checkbox;
+}
+</style>
+<div class="name">User: {{user.get_username}} | Date: {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+{%if teach is user.get_username%}
+<div class="home">
+    <div class="heading">
+      <h3>Mark Attendance for {{sub}}</h3>
+      <img src="{% static 'PICT-Logo.png' %}">
+    </div>
+    {% if messages %}
+{%for message in messages%}
+{{message}}
+{%endfor%}
+{% endif %}
+  <hr>
+<form id="actform" action=""method="POST" >
+    {% csrf_token %}
+    <input type="date" name="date">
+    <label for="date">Date</label>
+    <input type="number" name="duration">
+    <label for="duration">Duration</label>
+    <div class="tab" id="student">
+        <table>
+          <tr>
+          <th>
+            <div class="checkdiv grey400">
+              <input type="checkbox" class="chall" checked='checked' onclick="selectall()"/>
+            </div>
+          </th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Reg Number</th>
+          </tr>
+          <div class="holder">
+                {%for i in students%}
+                <tr>
+                   <td>
+                        <div class="checkdiv grey400">
+                      <input type="checkbox" class="le-checkbox" checked='checked'/><span> {%for t in i%}</span>
+                        </div>
+                    </td>
+                
+                      <td>{{t}}</td>
+                      
+                      {%endfor%}
+
+                </tr>
+                {%endfor%}
+              </div>
+        </table>
+    </div>
+    <input type="text" id="studentlist" hidden name="students">
+    <input type="text" name="division" hidden value='{{div}}'>
+    <input type="text" name="subject" hidden value='{{sub}}'>
+    <input type="text" name="class" hidden value='{{cls}}'>
+    <button type="button" onclick="submitlist()">Submit</button>
+</form
+  </div>
+
+  <a href="{%url 'index' %}">Go to Home</a>
+ 
+    </div>
+  {%endif%}
+  <script>
+
+    // function checker(){
+    //   var d=document.getElementById('divn')
+    //   var x=document.getElementById('class')
+    //   if(x.value==""){
+    //     confirm("Class Field is Empty, Please choose a valid Branch or create new class")
+    //   }
+    //   if(d.value==''){
+    //     confirm("Empty Division values not allowed")
+    //   }
+    //   submitlist();
+    // }
+    function submitlist(){
+      var rows = document.getElementsByTagName('tr');
+      var listo=[]
+      for(var i=1;i<rows.length;i++){
+        var s=rows[i].querySelectorAll('input[type="checkbox"]:not(:checked)');
+        if(s.length!=0){
+        var cols = rows[i].querySelectorAll('td,th');
+        listo.push(cols[3].innerHTML);
+      }
+    }
+      console.log(listo)
+      var myForm = document.getElementById("actform");
+      var myInput = document.getElementById("studentlist");
+      myInput.setAttribute("value",listo.toString());
+      console.log(myInput.value)
+      // console.log(myForm.type)
+      myForm.appendChild(myInput);
+      myForm.submit();
+
+    }
+    // function dropdownsel(){
+    //   var x=document.getElementById('branch')
+    //   var t=document.getElementById('class')
+    //   var p=document.getElementById('student')
+    //   document.querySelectorAll('#class option').forEach(option => option.remove())
+    //   var st=document.getElementsByTagName("tr");
+    //     var i=1;
+    //     var td=st.length-1
+    //     while(td--){
+    //       // console.log(st[i])
+    //       if(i<st.length)st[i].remove();
+    //     }
+    //   var cnt=0
+    //   {%for i in classes%}
+    //   {%for key,value in i.items%}
+    //   {% autoescape off %}
+    //   if('{{ key }}'=='branch_name_id' && '{{value}}'==x.value){
+    //     cnt=1
+    //   }
+    //   else if('{{key}}'=='branch_name_id')cnt=0
+    //   else{
+    //     if(cnt==1){
+    //       var y=document.getElementById('class')
+    //       var opt=document.createElement('option')
+    //       opt.value='{{value}}'
+    //       opt.text='{{value}}'
+    //       y.add(opt)
+    //       cnt=0;
+    //     }
+    //   }
+    //   // console.log('{{key}}','{{value}}',cnt)
+    //   {% endautoescape %}
+    //   {%endfor%}
+    //   {%endfor%}
+
+    //   var row;
+    //   var cnt2=0
+    //   {%for i in students%}
+    //   {%for key,value in i.items%}
+    //   {% autoescape off %}
+    //   if('{{ key }}'=='branch' && '{{value}}'==x.value){
+    //     cnt2=4
+    //   }
+    //   else if('{{key}}'=='branch_name_id')cnt2=0
+    //   else{
+    //     if(cnt2){
+    //     var table = document.getElementById("studtab");
+    //     var tarows= document.getElementsByTagName('tr')
+    //     var l=tarows.length
+    //     if(cnt2==4){
+    //       row = table.insertRow();var t=row.insertCell();t.innerHTML='<input type="checkbox"class="scndry">'
+    //   }
+    //     var cell = row.insertCell();
+    //     cell.innerHTML = '{{value}}';  
+    //     cnt2--;
+    //     }
+    //   }
+    //   // console.log('{{key}}','{{value}}',cnt)
+    //   {% endautoescape %}
+    //   {%endfor%}
+    //   {%endfor%}
+    //   dropdownsel2()
+    // }
+
+    // function dropdownsel2(){
+    //   var x=document.getElementById('class')
+    //   var l=document.getElementById('branch')
+    //   var p=document.getElementById('divn')
+    //   document.querySelectorAll('#divn option').forEach(option => option.remove())
+    //   // console.log(x.value)  
+    //   var cnt2=0
+    //   {%for i in divisions%}
+    //   {%for key,value in i.items%}
+    //   {% autoescape off %}
+    //   if('{{ key }}'=='class_name__class_name' && '{{value}}'==x.value){
+    //     cnt2=1
+    //   }
+    //   else if('{{key}}'=='branch_name__branch_name'&&'{{value}}'==l.value)cnt2++;
+    //   else if('{{key}}'=='class_name__class_name'||'{{key}}'=='branch_name__branch_name')cnt2=0
+    //   else{
+    //     if(cnt2==2){
+    //       var y=document.getElementById('divn')
+    //       var opt=document.createElement('option')
+    //       opt.value='{{value}}'
+    //       opt.text='{{value}}'
+    //       y.add(opt)
+    //       cnt2=0;
+    //     }
+    //   }
+    //   // console.log('{{key}}','{{value}}',cnt)
+    //   {% endautoescape %}
+    //   {%endfor%}
+    //   {%endfor%}
+    // }
+    function selectall(){
+  var s=document.getElementsByClassName('chall')
+  var t=document.getElementsByClassName('le-checkbox')
+
+  if(s[0].checked==true){
+    for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=true;
+    }
+  }
+}
+else{
+  for(var i=0;i<t.length;i++){
+    if(t[i].type=='checkbox'){
+      t[i].checked=false;
+    }
+  }
+}
+}
+  </script>

@@ -1,0 +1,38 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<div class="name">User: {{user.get_username}} | Date : {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+<style>
+  .choice{
+    width: 90%;
+  }
+</style>
+<div class="home">
+    <div class="heading">
+      <h3>Get Attendance Report</h3>
+      <img src="{% static 'PICT-Logo.png' %}">
+    </div>
+
+<form action=""method="POST" >
+    {% csrf_token %}
+    <div class="choice">
+      <label for="sub">Subject</label>
+      <select name="sub" style="width:20%;height: 40px;text-align: center;">
+        {%for i in subs%}
+        <option>{{i}}</option>
+        {%endfor%}
+      </select>
+    </div>
+      <div class="choice">
+      <label for="fromdate">From Date</label>
+      <input type="date" name="fromdate">
+      <label for="todate">To Date</label>
+      <input type="date" name="todate"></div>
+
+    <button type="submit" >submit</button><br> 
+</form>
+<a href="{%url 'index' %}">Go to Home</a>
+</div>

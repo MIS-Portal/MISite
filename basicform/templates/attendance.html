@@ -1,0 +1,35 @@
+{%load static%}
+{%load customtags%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<link rel='stylesheet' href="{% static 'Base.css' %}">
+<div class="name">User: {{user.get_username}} | Date : {% now "jS F Y" %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
+ 
+<div class="home">
+    <div class="heading">
+      <h3>Mark Attendance</h3>
+      <img src="{% static 'PICT-Logo.png' %}">
+    </div>
+
+<form action=""method="POST">
+    {% csrf_token %}
+      <select name="cls">
+        {%for i in classes%}
+        <option>{{i}}</option>
+        {%endfor%}
+      </select>
+      <select name="div">
+        {%for i in divisions%}
+        <option>{{i}}</option>
+        {%endfor%}
+      </select>
+      <select name="sub">
+        {%for i in subjects%}
+        <option>{{i}}</option>
+        {%endfor%}
+      </select>
+      <button type="submit" >submit</button><br>   
+</form>
+<a href="{%url 'index' %}">Go to Home</a>
+</div>
