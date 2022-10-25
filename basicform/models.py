@@ -303,3 +303,11 @@ class Faculty(models.Model):
     post_name=models.ForeignKey("FPost", null=True,on_delete=models.SET_NULL)
     def __str__(self):
         return self.name
+class Attendance(models.Model):
+    date=models.DateField()
+    reg_no=models.ForeignKey('FinalStudent',on_delete=models.CASCADE,null=True)
+    duration=models.IntegerField()
+    subject=models.ForeignKey('Subject',on_delete=models.CASCADE)
+    # division=models.ForeignKey('Division',on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.duration)+str(self.reg_no)

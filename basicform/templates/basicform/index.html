@@ -137,6 +137,34 @@ button.log {
     float: right;
     margin: -55px 10px 0px;
   }
+  .newbtns{
+    display: grid;
+    margin: -210px 55px 7px;
+    padding: 10px;
+    float: right;
+    align-content: center;
+  }
+  .stuf{
+    display: block;
+    padding:10px;
+  }
+  .two{
+    outline: 0;
+    width: 150px;
+    padding: 10px;
+    /* height: auto; */
+    margin: 5px;
+    background: #7272dc;
+    border: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3 ease;
+    cursor: pointer;
+  }
 </style>
 <div class="name">User: {{user.get_username}} | Date: {% now "jS F Y " %} | {%if user|has_group:"Administrator"%}Adminstration{%elif user|has_group:"Data Entry"%}Data Entry{%endif%}</div>
 
@@ -149,6 +177,7 @@ button.log {
 <a href="{% url 'login' %}"><button class="log">Login</button></a>
 {% endif %}
 <!-- </div> -->
+
 <hr>
 {% if messages %}
 {%for message in messages%}
@@ -156,8 +185,38 @@ button.log {
 {%endfor%}
 {% endif %}
 {%if user.is_authenticated %}
+{%if user|has_group:"Student"%}
+<div class="stuf">
+<h1>Student</h1>
+{{user.first_name}}
+{{user.last_name}}
+<p>Reg no. {{user.get_username}}</p>
+<div class="newbtns">
+  <a href="/basicform/showstudents/{{user.get_username}}"><button class="two">View Profile</button></a>
+  <a href="{%url 'change_password'%}"><button class="two">Change Password</button></a>
+  <a href="{%url 'stud_att'%}"><button class="two">Show Attendance</button></a>
+  <a href="{%url 'showpending'%}"><button class="two">Show Grades</button></a>
+
+</div>
+</div>
+{%elif user|has_group:"Faculty"%}
+<div class="stuf">
+  <h1>Faculty</h1>
+  {{user.first_name}}
+  <p>Empcode {{user.get_username}}</p>
+  <div class="newbtns">
+    <a href="{%url 'showpending'%}"><button class="two">View Profile</button></a>
+  <a href="{%url 'change_password'%}"><button class="two">Change Password</button></a>
+    <a href="{%url 'attendance'%}"><button class="two">Mark Attendance</button></a>
+    <a href="{%url 'attreports'%}"><button class="two">Show Attendance</button></a>
+    <a href="{%url 'showpending'%}"><button class="two">Show Grades</button></a>
+  
+  </div>
+  </div>
+{%else%}
 <div class="links">
   <!-- <ul> -->
+   
   <a href="/basicform/student"><button class="act">Fill Form</button></a>
   <!-- </ul> -->
   {%if user|has_group:"Administrator"%}
@@ -209,6 +268,7 @@ button.log {
  <li><strong>Fill Form:</strong> Fill and Submit Student Information</li>
  <li><strong>View Form:</strong> View Latest Filled Form</li></ul>
 </div>
+{%endif%}
 {%endif%}
 {%else%}
 <div class="container3">

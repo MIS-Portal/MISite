@@ -12,12 +12,14 @@ from .forms import AdminForm
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
-from .models import Student,FinalStudent,DeletedStudent,Branch,Clss
+from .models import Student,FinalStudent,DeletedStudent,Branch,Clss,Attendance
 from .models import Division,Subject,FPost,Faculty
 from django.template import loader
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User,Group
+from django.db.models import Count
+from datetime import datetime,timedelta
 def index(request):
     return render(request,'basicform/index.html')
 class ShowPending(ListView):
@@ -171,7 +173,7 @@ def FinalRemove(request,rollno):
 class DisplayFStudent(ListView):
     model=FinalStudent
 def find_final_student(request,hkey):
-    if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
+    if  not request.user.is_authenticated or request.user.username!=hkey: return redirect('login')
     try:
         s=FinalStudent.objects.get(reg_no=hkey)
         dic=model_to_dict(s)
@@ -219,7 +221,7 @@ def UploadCsv(request):
             # print(temp[56])
             recdict={finalfeilds[j]:temp[j] for j in range(0,len(temp))}
             f=FinalStudent(**recdict)
-            u=[f.reg_no,f.email]
+            u=[f.reg_no,f.email,f.first_name,f.last_name]
             userlist.append(u)
             bulklist.append(f)
        try:
@@ -229,7 +231,7 @@ def UploadCsv(request):
             un=[]
             sgroup=Group.objects.get(name='Student')
             for i in userlist:
-                uin=User(username=i[0],email=i[1],password=s)
+                uin=User(username=i[0],email=i[1],password=s,first_name=i[2],last_name=i[3])
                 ul.append(uin)
                 un.append(i[0])
             User.objects.bulk_create(ul)
@@ -357,7 +359,7 @@ def addpost(request,opt):
                 messages.success(request,"Faculty Updated Successfully")
                 return redirect('addpost',1)
             f.save()
-            fuser=User.objects.create_user(username=f.emp_code,password="pict@123")
+            fuser=User.objects.create_user(username=f.emp_code,password="pict@123",first_name=f.name)
             fgroup=Group.objects.get(name='Faculty')
             fuser.groups.add(fgroup)
             fuser.save()
@@ -538,3 +540,167 @@ def delentity(request):
         if  'confirm' in request.POST and request.POST['confirm']=='NO':
             return redirect('index')
     return render(request,'delent.html',context) 
+def timetable(request):
+    reg=request.user.username
+    stu=get_object_or_404(FinalStudent,reg_no=reg)
+    subs=Subject.objects.filter(branch_name=stu.branch,class_name=stu.class_name,division=stu.division,).values('sub_name','faculty__name')
+    return HttpResponse('Timetable')
+def attendance(request):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Faculty').exists(): return redirect('login')
+    tcode=request.user.username
+    userbranch=Faculty.objects.filter(emp_code=tcode).values_list('branch_name',flat=True)
+    if request.method=='POST':
+        if 'cls' in request.POST:
+            cls=request.POST['cls']
+            div=request.POST['div']
+            sub=request.POST['sub']
+            # print(div)
+            studlist=FinalStudent.objects.filter(class_name__class_name=cls,division__div_name=div,branch=userbranch[0]).values_list('first_name','last_name','reg_no')
+            ctext={'students':studlist,'teach':request.user.username,'sub':sub,'cls':cls,'div':div}
+            # print(ctext)
+            return render(request,'markatt.html',ctext)
+        if 'students' in request.POST:
+            print(dict(request.POST))
+            studs=list(request.POST['students'].split(','))
+            sub=request.POST['subject']
+            date=request.POST['date']
+            dur=request.POST['duration']
+            cls=request.POST['class']
+            div=request.POST['division']
+            objlist=[]
+            if studs!=['']:
+                for i in studs:
+                    print(i)
+                    st=get_object_or_404(FinalStudent,reg_no=i)
+                    su=get_object_or_404(Subject,sub_name=sub,class_name=st.class_name,division=st.division,branch_name__branch_name=userbranch[0])
+                    # print(div,cls,userbranch[0])
+                    # div=get_object_or_404(Division,div_name=div,class_name__class_name=cls,branch_name__branch_name=userbranch[0])
+                    objlist.append(Attendance(subject=su,date=date,duration=dur,reg_no=st))
+            if len(objlist)==0:
+                su=get_object_or_404(Subject,sub_name=sub,class_name__class_name=cls,division__div_name=div,branch_name__branch_name=userbranch[0])
+                a=Attendance(subject=su,date=date,duration=dur)
+                a.save()
+            else: Attendance.objects.bulk_create(objlist)
+            messages.success(request,"Attendance Recorded Successfully")
+            return redirect('index')
+    classes=Subject.objects.filter(faculty__emp_code=tcode).values_list('class_name__class_name',flat=True)
+    divisions=Subject.objects.filter(faculty__emp_code=tcode).distinct().values_list('division__div_name',flat=True)
+    subjects=Subject.objects.filter(faculty__emp_code=tcode).values_list('sub_name',flat=True)
+    context={'subjects':subjects,'classes':classes,'divisions':divisions}
+    return render(request,'attendance.html',context)
+def attreports(request):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Faculty').exists(): return redirect('login')
+    print(request.user.groups.filter(name='Faculty').exists())
+    tcode=request.user.username
+    tbranch=Faculty.objects.filter(emp_code=tcode).values_list('branch_name',flat=True)
+    if request.method=='POST':
+        cls=request.POST['cls']
+        div=request.POST['div']
+        sub=request.POST['sub']
+        fro=request.POST['fromdate']
+        tod=request.POST['todate']
+        if request.POST['type']=='Basic':
+            su=get_object_or_404(Subject,sub_name=sub,class_name__class_name=cls,division__div_name=div,branch_name__branch_name=tbranch[0])
+            att=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values('date','duration').annotate(total=Count('reg_no',distinct=True))
+            print(att)
+            clstrngth=FinalStudent.objects.filter(class_name__class_name=cls,division__div_name=div,branch=tbranch[0]).count()
+            for i in att:
+               for j in i.keys():
+                if j=='date':
+                    tem=i[j]
+                    i[j]=str(tem)
+                elif j=='total':i[j]=clstrngth-i[j]
+            blist=[]
+            for i in att:
+                tem=[]
+                for j in i.values():
+                    tem.append(j)
+                blist.append(tem)
+            ctext={'basiclist':blist,'cls':cls,'div':div}
+            return render(request,'attrep.html',ctext)
+        else:
+            su=get_object_or_404(Subject,sub_name=sub,class_name__class_name=cls,division__div_name=div,branch_name__branch_name=tbranch[0])
+            attr=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values('date','duration').annotate(total=Count('reg_no',distinct=True)).order_by('date','duration')
+            print(attr)
+            clstrngth=FinalStudent.objects.filter(class_name__class_name=cls,division__div_name=div,branch=tbranch[0]).count()
+            studs=FinalStudent.objects.filter(branch=tbranch[0],class_name__class_name=cls,division__div_name=div).values_list('reg_no','first_name','last_name')
+            names={i[0]:i[1]+' '+i[2] for i in studs}
+            # st=datetime.strptime(fro,'%Y-%m-%d')
+            # et=datetime.strptime(tod,'%Y-%m-%d')
+            # datelist=[]
+            # while st!=et+timedelta(days=1):
+            #     datelist.append(st)
+            #     st+=timedelta(days=1)
+            absent=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values_list('date','reg_no__reg_no','duration').order_by('date','duration')
+            datedict={}
+            for i in attr:
+                d=''
+                t=0
+                for key,value in i.items():
+                   if key=='date':d+=str(value)+' '
+                   if key=='duration':d+=str(value)+'hrs'
+                   if key=='total':t=clstrngth-value
+                datedict[d]=t 
+            print(list(studs))
+            print(absent)
+            mat={}
+            for i in studs:
+                tem={}
+                for j in datedict.keys():
+                    tem[str(j)]='P'
+                mat[i[0]]=tem
+            for i in absent:
+                if i[1]!=None: mat[i[1]][str(i[0])+' '+str(i[2])+'hrs']='A'
+            for key,value in mat.items():
+                print(key,value)
+            att=[]
+            for key,value in mat.items():
+                tem=[]
+                tem.append(key)
+                tem.append(names[key])
+                for j in value.values():
+                    tem.append(j)
+                att.append(tem)
+            print(att)
+            context={'att':att,'dates':datedict,'cls':cls,'div':div}
+            return render(request,'detailatt.html',context)
+    classes=Subject.objects.filter(faculty__emp_code=tcode).values_list('class_name__class_name',flat=True)
+    divisions=Subject.objects.filter(faculty__emp_code=tcode).distinct().values_list('division__div_name',flat=True)
+    subjects=Subject.objects.filter(faculty__emp_code=tcode).values_list('sub_name',flat=True)
+    context={'subjects':subjects,'classes':classes,'divisions':divisions}
+    return render(request,'get_attendance.html',context)
+def studentatt(request):
+    if  not request.user.is_authenticated or not request.user.groups.filter(name='Student').exists(): return redirect('login')
+    studreg=request.user.username
+    studself=get_object_or_404(FinalStudent,reg_no=studreg)
+    if request.method=='POST':
+        sub=request.POST['sub']
+        fro=request.POST['fromdate']
+        tod=request.POST['todate']
+        su=get_object_or_404(Subject,sub_name=sub,branch_name__branch_name=studself.branch,class_name=studself.class_name,division=studself.division)
+        lst=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values_list('date','duration','reg_no__reg_no')
+        tab={}
+        for i in lst:
+            d=str(i[0])+' '+str(i[1])+'hrs'
+            if i[2]==studreg:tab[d]='A'
+            if d not in tab.keys() or tab[d]!='A':tab[d]='P'
+        context={'tab':tab}
+        print(tab)
+        return render(request,'studatt_report.html',context)
+    subs=Subject.objects.filter(branch_name__branch_name=studself.branch,class_name=studself.class_name,division=studself.division).values_list('sub_name',flat=True)
+    context={'subs':subs}
+    return render(request,'get_studentatt.html',context)
+def passchange(request):
+    if request.method=='POST':
+        oldp=request.POST['oldpass']
+        newp=request.POST['newpass']
+        u=authenticate(username=request.user,password=oldp)
+        if u==request.user:
+            u.set_password(newp)
+            u.save()
+            messages.success(request,("Password Changed Successfully"))
+            return redirect('index')
+        else:
+            messages.success(request,("There was an error changing your password; Please try again :("))
+            return redirect('change_password')
+    return render(request,'auth/change_password.html')

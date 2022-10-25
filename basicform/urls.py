@@ -18,6 +18,10 @@ urlpatterns = [
     path('assign_subjects/',views.assignSubject,name='asgnsub'),
     path('assign_class/',views.assignclass,name='asgnclass'),
     path('display_classlist/',views.displayClasses,name='dispclass'),
+    path('mark_attendance/',views.attendance,name='attendance'),
+    path('att_reports/',views.attreports,name='attreports'),
+    path('student_att/',views.studentatt,name='stud_att'),
+    path('change_password/',views.passchange,name='change_password'),
     re_path(r'addpost_faculty/(?P<opt>.{1})',views.addpost,name='addpost'),
     path('delete_entity/',views.delentity,name='delent'),
     re_path(r'addbcds/(?P<cat>.{1})',views.addbcds,name='adcls'),
@@ -25,5 +29,4 @@ urlpatterns = [
     re_path(r'showstudents/(?P<hkey>.{11})',views.find_final_student,name='fstudent'),
     re_path(r'showdelstudents/(?P<hkey>.{11})',views.find_deleted_student,name='fdstudent'),
     re_path(r'removestudent/(?P<rollno>.{11})',views.FinalRemove,name='fremove'),
-    # path('showstudent/',views.showstudent,name='showstudent')
 ]
