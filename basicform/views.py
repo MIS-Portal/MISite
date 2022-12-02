@@ -20,6 +20,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User,Group
 from django.db.models import Count
 from datetime import datetime,timedelta
+from django.db.models import Sum
+from collections import Counter
 def index(request):
     return render(request,'basicform/index.html')
 class ShowPending(ListView):
@@ -116,6 +118,9 @@ def logoutUser(request):
 def GenerateReports(request):
     if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
     fslist=[f.name for f in FinalStudent._meta.get_fields()]
+    for i in flist:
+        capitalize(i)
+        i.replace('')
     fslist.remove('id')
     if request.method=="POST":
         plist=dict(request.POST.items())
@@ -583,9 +588,9 @@ def attendance(request):
             else: Attendance.objects.bulk_create(objlist)
             messages.success(request,"Attendance Recorded Successfully")
             return redirect('index')
-    classes=Subject.objects.filter(faculty__emp_code=tcode).values_list('class_name__class_name',flat=True)
+    classes=Subject.objects.filter(faculty__emp_code=tcode).values_list('class_name__class_name',flat=True).distinct().order_by()
     divisions=Subject.objects.filter(faculty__emp_code=tcode).distinct().values_list('division__div_name',flat=True)
-    subjects=Subject.objects.filter(faculty__emp_code=tcode).values_list('sub_name',flat=True)
+    subjects=Subject.objects.filter(faculty__emp_code=tcode).values_list('sub_name',flat=True).distinct().order_by()
     context={'subjects':subjects,'classes':classes,'divisions':divisions}
     return render(request,'attendance.html',context)
 def attreports(request):
@@ -601,21 +606,27 @@ def attreports(request):
         tod=request.POST['todate']
         if request.POST['type']=='Basic':
             su=get_object_or_404(Subject,sub_name=sub,class_name__class_name=cls,division__div_name=div,branch_name__branch_name=tbranch[0])
-            att=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values('date','duration').annotate(total=Count('reg_no',distinct=True))
-            print(att)
-            clstrngth=FinalStudent.objects.filter(class_name__class_name=cls,division__div_name=div,branch=tbranch[0]).count()
-            for i in att:
-               for j in i.keys():
-                if j=='date':
-                    tem=i[j]
-                    i[j]=str(tem)
-                elif j=='total':i[j]=clstrngth-i[j]
+            totalhours=Attendance.objects.filter(subject=su,date__range=[fro,tod]).aggregate(Sum('duration'))
+            absent=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values_list('reg_no__reg_no',flat=True)
+            abdict={}
+            abdict=dict(Counter(absent))
+            studs=FinalStudent.objects.filter(branch=tbranch[0],class_name__class_name=cls,division__div_name=div).values_list('reg_no','first_name','last_name')
             blist=[]
-            for i in att:
+            if len(absent)==0 : return HttpResponse("NO RECORDS FOUND")
+            for i in studs:
                 tem=[]
-                for j in i.values():
-                    tem.append(j)
+                tem.append(i[0])
+                tem.append(i[1])
+                tem.append(i[2])
+                tem.append(totalhours['duration__sum'])
+                k=0
+                if i[0] in abdict:k=abdict[i[0]]
+                tot=totalhours['duration__sum']
+                tem.append(tot-k)
+                tem.append(round((tot-k)*100/tot,2))
                 blist.append(tem)
+            print(blist)
+            
             ctext={'basiclist':blist,'cls':cls,'div':div}
             return render(request,'attrep.html',ctext)
         else:
@@ -625,12 +636,6 @@ def attreports(request):
             clstrngth=FinalStudent.objects.filter(class_name__class_name=cls,division__div_name=div,branch=tbranch[0]).count()
             studs=FinalStudent.objects.filter(branch=tbranch[0],class_name__class_name=cls,division__div_name=div).values_list('reg_no','first_name','last_name')
             names={i[0]:i[1]+' '+i[2] for i in studs}
-            # st=datetime.strptime(fro,'%Y-%m-%d')
-            # et=datetime.strptime(tod,'%Y-%m-%d')
-            # datelist=[]
-            # while st!=et+timedelta(days=1):
-            #     datelist.append(st)
-            #     st+=timedelta(days=1)
             absent=Attendance.objects.filter(subject=su,date__range=[fro,tod]).values_list('date','reg_no__reg_no','duration').order_by('date','duration')
             datedict={}
             for i in attr:
@@ -665,9 +670,10 @@ def attreports(request):
             context={'att':att,'dates':datedict,'cls':cls,'div':div}
             return render(request,'detailatt.html',context)
     classes=Subject.objects.filter(faculty__emp_code=tcode).values_list('class_name__class_name',flat=True)
+    clset=set(classes)
     divisions=Subject.objects.filter(faculty__emp_code=tcode).distinct().values_list('division__div_name',flat=True)
     subjects=Subject.objects.filter(faculty__emp_code=tcode).values_list('sub_name',flat=True)
-    context={'subjects':subjects,'classes':classes,'divisions':divisions}
+    context={'subjects':subjects,'classes':clset,'divisions':divisions}
     return render(request,'get_attendance.html',context)
 def studentatt(request):
     if  not request.user.is_authenticated or not request.user.groups.filter(name='Student').exists(): return redirect('login')

@@ -16,7 +16,7 @@
       <img src="{% static 'PICT-Logo.png' %}">
     </div>
 
-<form action=""method="POST" >
+<form action=""method="POST" onsubmit="return validate()" >
     {% csrf_token %}
     <div class="choice">
       <label for="sub">Subject</label>
@@ -28,11 +28,22 @@
     </div>
       <div class="choice">
       <label for="fromdate">From Date</label>
-      <input type="date" name="fromdate">
+      <input type="date" name='fromdate' id="fromdate">
       <label for="todate">To Date</label>
-      <input type="date" name="todate"></div>
+      <input type="date" name="todate" id="todate"></div>
 
     <button type="submit" >submit</button><br> 
 </form>
 <a href="{%url 'index' %}">Go to Home</a>
 </div>
+<script>
+  function validate(){
+    const fro=document.getElementById('fromdate').value
+    const tod=document.getElementById('todate').value
+    if(fro>tod){
+      alert('From Date should be less than or equal to to date')
+      return false;
+    }
+    return true;
+  }
+</script>
