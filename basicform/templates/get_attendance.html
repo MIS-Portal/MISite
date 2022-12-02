@@ -16,7 +16,7 @@
       <img src="{% static 'PICT-Logo.png' %}">
     </div>
 
-<form action=""method="POST" >
+<form action=""method="POST" onsubmit="return validate()" >
     {% csrf_token %}
     <div class="choice">
       <label for="cls">Class</label>
@@ -40,9 +40,9 @@
     </div>
       <div class="choice">
       <label for="fromdate">From Date</label>
-      <input type="date" name="fromdate">
-      <label for="todate">To Date</label>
-      <input type="date" name="todate"></div>
+      <input type="date" name="fromdate" id="fromdate">
+      <label for="todate" >To Date</label>
+      <input type="date" name="todate" id="todate"></div>
       <div class="choice" >  
       <label for="type" >Format</label>
       <select name="type" style="width:50%;height: 40px;text-align: center;">
@@ -54,3 +54,14 @@
 </form>
 <a href="{%url 'index' %}">Go to Home</a>
 </div>
+<script>
+  function validate(){
+    var fro= document.getElementById('fromdate').value
+    var tod=document.getElementById('todate').value
+    if(fro>tod){
+      alert("from date can't be greater than to date");
+      return false;
+    }
+    return true;
+  }
+</script>
