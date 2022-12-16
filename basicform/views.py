@@ -118,9 +118,6 @@ def logoutUser(request):
 def GenerateReports(request):
     if  not request.user.is_authenticated or not request.user.groups.filter(name='Administrator').exists(): return redirect('login')
     fslist=[f.name for f in FinalStudent._meta.get_fields()]
-    for i in flist:
-        capitalize(i)
-        i.replace('')
     fslist.remove('id')
     if request.method=="POST":
         plist=dict(request.POST.items())
